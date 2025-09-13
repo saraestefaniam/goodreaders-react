@@ -1,41 +1,86 @@
-import React from "react";
+import { useState, useEffect } from "react";
+import { getBooks, getGenres } from "./service";
+import type { Book } from "./type";
+import type { Genre } from "./genres-type.ts";
+import Page from "../../components/ui/layout/page";
+import Button from "../../components/ui/button";
+import BookItem from "./book-item";
+import { Link } from "react-router-dom";
 import "./books-page.css";
-import clsx from "clsx";
-import styles from "./books-page.module.css";
-import Button from "../../components/button";
-// import { getLatestBooks } from "./auth/service";
-import { useEffect, useState } from "react";
-import type { Book } from "./type.ts";
 
-interface BooksPageProps {
-  active: boolean;
-}
+// Página que lista todos los libros
 
-function BooksPage({ active }: BooksPageProps) {
+const VALID_GENRES: Genre[] = ["fantasy", "scifi", "romance", "nonfiction"];
+
+
+const EmptyList = () => (
+  <div>
+    <p>No books yet. Be the first to add one!</p>
+    <Button variant="primary">Add Book</Button>
+  </div>
+);
+
+function BooksPage() {
   const [books, setBooks] = useState<Book[]>([]);
+  const [availableGenres, setAvailableGenres] = useState<Genre[]>([]);
+  const [filterGenres, setFilterGenres] = useState<Genre[]>([]);
 
   useEffect(() => {
-    async function getBooks() {
-      const books = await getLatestBooks();
+    async function fetchData() {
+      const books = await getBooks();
+      const genresFromApi = await getGenres();
+      const validGenres = genresFromApi.filter((g): g is Genre =>
+        VALID_GENRES.includes(g as Genre),
+      );
       setBooks(books);
+      setAvailableGenres(validGenres);
     }
-    getBooks();
+    fetchData();
   }, []);
 
+  
+  const filteredBooks = books.filter((book) => {
+    return filterGenres.length
+      ? filterGenres.every((genre) => book.genres.includes(genre))
+      : true;
+  });
+
   return (
-    <div className={clsx(styles["books-page"], { active })}>
-      <h1 style={{ color: "orange", backgroundColor: "green" }}>
-        Books Page
-      </h1>
-      <ul className="flex flex-col text-green-900">
-        {books.map((book) => (
-          <li key={book.id}>{book.title}</li>
-        ))}
-      </ul>
-      <Button disabled={false} $variant="secondary">
-        Click me
-      </Button>
-    </div>
+    <Page title="Books">
+      <form className="filter-form">
+        <div className="filter-tags">
+          Genres:
+          {availableGenres.map((genre) => (
+            <label key={genre} className="filter-tag-label">
+              <input
+                type="checkbox"
+                checked={filterGenres.includes(genre)}
+                onChange={() =>
+                  setFilterGenres((prev) =>
+                    prev.includes(genre)
+                      ? prev.filter((g) => g !== genre)
+                      : [...prev, genre],
+                  )
+                }
+              />
+              {genre}
+            </label>
+          ))}
+        </div>
+      </form>
+
+      {filteredBooks.length ? (
+        <div className="book-list">
+          {filteredBooks.map((book) => (
+            <Link to={`/books/${book.id}`} key={book.id}>
+              <BookItem book={book} />
+            </Link>
+          ))}
+        </div>
+      ) : (
+        <EmptyList />
+      )}
+    </Page>
   );
 }
 

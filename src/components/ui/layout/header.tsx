@@ -1,6 +1,6 @@
 import React from "react";
 import GoodReaders from "../icons/GoodReaders.tsx";
-//import AuthButton from "../../../pages/auth/auth-button.tsx";
+import AuthButton from "../../../pages/auth/auth-button.tsx";
 import "./header.css";
 import { Link } from "react-router-dom";
 
@@ -13,7 +13,7 @@ function Header() {
         </div>
       </Link>
       <nav className="header-nav">
-        <Link to="/adverts/new">New Advert</Link>
+        <Link to="/books/new">Add New Book</Link>
         <AuthButton />
       </nav>
     </header>
