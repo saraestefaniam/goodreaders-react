@@ -13,7 +13,12 @@ function Header() {
       </Link>
 
       <nav className="header-nav">
-        <NavLink to="/new-user" className="header-nav">Create user</NavLink>
+        <NavLink to="/new-user" className="header-nav">
+          Create user
+        </NavLink>
+        <NavLink to="login" className="header-nav">
+          Login
+        </NavLink>
       </nav>
     </header>
   );
