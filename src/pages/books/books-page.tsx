@@ -1,9 +1,8 @@
 import { useState, useEffect } from "react";
-import { getBooks} from "./service";
+import { getBooks, getGenres } from "./service";
 import type { Book } from "./type";
-import { VALID_GENRES } from "./genres-type"; 
-import type { Genre } from "./genres-type";  
-import { getGenres } from "./service";
+import type { Genre } from "./genres-type";
+import { VALID_GENRES } from "./genres-type";
 import Page from "../../components/ui/layout/page";
 import Button from "../../components/ui/button";
 import BookItem from "./book-item";
@@ -23,25 +22,24 @@ function BooksPage() {
   const [filterGenres, setFilterGenres] = useState<Genre[]>([]);
 
   useEffect(() => {
-    async function fetchData() {
-      const books = await getBooks();
-      const genresFromApi = await getGenres();
-
-      const validGenres = genresFromApi.filter((g): g is Genre =>
-        VALID_GENRES.includes(g as Genre)
-      );
-
-      setBooks(books);
-      setAvailableGenres(validGenres);
-    }
-    fetchData();
+    (async () => {
+      try {
+        const booksFromApi = await getBooks();
+        const genresFromApi = await getGenres();
+        const validGenres = genresFromApi.filter((g): g is Genre =>
+          VALID_GENRES.includes(g as Genre)
+        );
+        setBooks(booksFromApi);
+        setAvailableGenres(validGenres);
+      } catch (e) {
+        console.error(e);
+      }
+    })();
   }, []);
 
-  const filteredBooks = books.filter((book) => {
-    return filterGenres.length
-      ? filterGenres.every((genre) => book.genre.includes(genre))
-      : true;
-  });
+  const filteredBooks = books.filter((book) =>
+    filterGenres.length ? filterGenres.every((g) => book.genre.includes(g)) : true
+  );
 
   return (
     <Page title="Books">

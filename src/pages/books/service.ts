@@ -4,7 +4,13 @@ import type { Book } from "./type";
 
 const BOOKS_URL = "/api/books"; // hay que ajustarla segun backend 
 
-// GET
+// GET lista
+export const getBooks = async () => {
+  const response = await client.get<Book[]>(BOOKS_URL);
+  return response.data;
+};
+
+// GET detalle
 export const getBook = async (bookId: string) => {
   const response = await client.get<Book>(`${BOOKS_URL}/${bookId}`);
   return response.data;
