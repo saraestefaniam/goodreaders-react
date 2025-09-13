@@ -1,0 +1,12 @@
+.footer {
+    height: 64px;
+    padding: 0 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-style: solid;
+    border-color: rgb(var(--color-border));
+    border-top-width: 1px;
+    color: rgb(var(--color-primary-text));
+    background-color: rgb(255, 240, 245);
+  }
