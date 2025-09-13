@@ -1,0 +1,1 @@
+export type Genre = "fantasy" | "science-fiction" | "romance" | "thriller" | "non-fiction" | "historical" | "mystery";

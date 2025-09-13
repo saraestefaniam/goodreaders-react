@@ -1,10 +1,11 @@
+import React from "react";
 import "./books-page.css";
 import clsx from "clsx";
 import styles from "./books-page.module.css";
 import Button from "../../components/button";
-import { getLatestBooks } from "./auth/service";
+// import { getLatestBooks } from "./auth/service";
 import { useEffect, useState } from "react";
-import type { Book } from "./types";
+import type { Book } from "./type.ts";
 
 interface BooksPageProps {
   active: boolean;

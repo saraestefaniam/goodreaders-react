@@ -1,1 +1,62 @@
 @import "tailwindcss";
+
+:root {
+  --color-primary-text: 51, 37, 0;
+  /* marrón oscuro */
+  --color-secondary-text: 97, 67, 28;
+  /* café */
+  --color-border: 224, 209, 174;
+  /* beige claro */
+  --color-danger: 153, 27, 27;
+  /* rojo oscuro (para errores) */
+  --color-books: 48, 104, 80;
+  /* verde */
+}
+
+* {
+  box-sizing: border-box;
+  border-width: 0;
+}
+
+html {
+  min-height: 100vh;
+}
+
+body {
+  color: rgb(var(--color-primary-text));
+  margin: 0;
+  font-family:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu",
+    "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+input,
+textarea {
+  color: rgb(var(--color-primary-text));
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin: 0;
+}
+
+ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+svg {
+  fill: currentColor;
+}
