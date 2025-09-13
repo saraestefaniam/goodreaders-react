@@ -1,9 +1,8 @@
 /* eslint-disable react/react-in-jsx-scope */
 import Layout from './components/ui/layout/layout'
 import { Routes, Route } from 'react-router-dom'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
 import './App.css'
+import CreateUserPage from './pages/auth/create-user-page'
 
 function App() {
 
@@ -11,6 +10,7 @@ function App() {
     <div>
       <Routes>
         <Route path="/" element={<Layout />}>
+        <Route path="new-user" element={<CreateUserPage />}/>
         </Route>
       </Routes>
     </div>

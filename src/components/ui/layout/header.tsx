@@ -1,4 +1,4 @@
-import React from "react";
+//import React from "react";
 import GoodReadersIcon from "../icons/GoodReaders";
 import "./header.css";
 import { Link, NavLink } from "react-router-dom";
@@ -13,7 +13,7 @@ function Header() {
       </Link>
 
       <nav className="header-nav">
-        <NavLink to="/newuser" className="header-nav">Create user</NavLink>
+        <NavLink to="/new-user" className="header-nav">Create user</NavLink>
       </nav>
     </header>
   );
