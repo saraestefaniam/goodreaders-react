@@ -1,17 +1,14 @@
 import { useState, useEffect } from "react";
-import { getBooks, getGenres } from "./service";
+import { getBooks} from "./service";
 import type { Book } from "./type";
-import type { Genre } from "./genres-type.ts";
+import { VALID_GENRES } from "./genres-type"; 
+import type { Genre } from "./genres-type";  
+import { getGenres } from "./service";
 import Page from "../../components/ui/layout/page";
 import Button from "../../components/ui/button";
 import BookItem from "./book-item";
 import { Link } from "react-router-dom";
-import "./books-page.css";
-
-// Página que lista todos los libros
-
-const VALID_GENRES: Genre[] = ["fantasy", "scifi", "romance", "nonfiction"];
-
+import "./index.css";
 
 const EmptyList = () => (
   <div>
@@ -29,19 +26,20 @@ function BooksPage() {
     async function fetchData() {
       const books = await getBooks();
       const genresFromApi = await getGenres();
+
       const validGenres = genresFromApi.filter((g): g is Genre =>
-        VALID_GENRES.includes(g as Genre),
+        VALID_GENRES.includes(g as Genre)
       );
+
       setBooks(books);
       setAvailableGenres(validGenres);
     }
     fetchData();
   }, []);
 
-  
   const filteredBooks = books.filter((book) => {
     return filterGenres.length
-      ? filterGenres.every((genre) => book.genres.includes(genre))
+      ? filterGenres.every((genre) => book.genre.includes(genre))
       : true;
   });
 
@@ -59,7 +57,7 @@ function BooksPage() {
                   setFilterGenres((prev) =>
                     prev.includes(genre)
                       ? prev.filter((g) => g !== genre)
-                      : [...prev, genre],
+                      : [...prev, genre]
                   )
                 }
               />

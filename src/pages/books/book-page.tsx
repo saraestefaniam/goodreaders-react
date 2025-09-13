@@ -2,12 +2,10 @@ import { useNavigate, useParams } from "react-router-dom";
 import Page from "../../components/ui/layout/page";
 import { useEffect, useState } from "react";
 import type { Book } from "./type";
-import { getBook, deleteBook } from "./service";
+import { getBooks, deleteBook } from "./service";
 import { AxiosError } from "axios";
 import ConfirmDialog from "../../components/ui/layout/confirm-dialog";
 import Button from "../../components/ui/button";
-
-// Página de detalle de un libro
 
 function BookPage() {
   const params = useParams();
@@ -24,9 +22,14 @@ function BookPage() {
     } catch (error) {
       if (error instanceof AxiosError) {
         const status = error.response?.status;
-        if (status === 404) navigate("/404");
-        else if (status === 401) navigate("/login");
-        else console.error("Unexpected error while deleting:", error);
+
+        if (status === 404) {
+          navigate("/404");
+        } else if (status === 401) {
+          navigate("/login");
+        } else {
+          console.error("Unexpected error while deleting:", error);
+        }
       } else {
         console.error("Unknown error:", error);
       }
@@ -35,11 +38,14 @@ function BookPage() {
 
   useEffect(() => {
     if (!params.bookId) return;
-    getBook(params.bookId)
-      .then((book) => setBook(book))
+
+    getBooks(params.bookId)
+      .then((b) => setBook(b))
       .catch((error) => {
-        if (error instanceof AxiosError && error.status === 404) {
-          navigate("/404");
+        if (error instanceof AxiosError) {
+          if (error.response?.status === 404) {
+            navigate("/404");
+          }
         }
       });
   }, [params.bookId, navigate]);
@@ -67,12 +73,24 @@ function BookPage() {
                   </span>
                 ))}
               </div>
-              <p className="book-item-description">{book.description}</p>
+              {book.description && (
+                <p className="book-item-description">{book.description}</p>
+              )}
               <p className="book-item-status">
                 {book.wantToRead ? "Want to read" : "Already read"}
               </p>
+              <div className="book-item-rating" title={`${book.rating}/5`}>
+                {"★".repeat(book.rating) + "☆".repeat(5 - book.rating)}
+              </div>
             </div>
-            <div style={{ display: "flex", justifyContent: "flex-start", padding: "1rem" }}>
+
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "flex-start",
+                padding: "1rem",
+              }}
+            >
               <Button variant="primary" onClick={() => setShowConfirm(true)}>
                 Delete
               </Button>

@@ -4,10 +4,10 @@ import type { Book } from "./type";
 interface BookItemProps {
   book: Book;
 }
-// Componente para mostrar un libro individual
 
 const BookItem = ({ book }: BookItemProps) => {
-  const { title, author, genre, cover, wantToRead } = book;
+  const { title, author, genre, cover, wantToRead, rating } = book;
+  const stars = "★".repeat(rating) + "☆".repeat(5 - rating);
 
   return (
     <article className="book-item">
@@ -19,6 +19,13 @@ const BookItem = ({ book }: BookItemProps) => {
       <div className="book-item-details">
         <h2 className="book-item-title">{title}</h2>
         <p className="book-item-author">by {author}</p>
+        <div
+          className="book-item-rating"
+          aria-label={`Rating: ${rating} out of 5`}
+          title={`${rating}/5`}
+        >
+          {stars}
+        </div>
         <div className="book-item-genres">
           {genre.map((g) => (
             <span key={g} className="book-item-genre">
