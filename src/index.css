@@ -1,4 +1,27 @@
-@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* src/styles/variables.css */
+:root {
+  --color-primary: #721422;
+  --color-primary-hover: #e0245e;
+  --color-bg: #fff0f5;
+  --color-text: #333;
+  --cards: #
+  --border-radius: 8px;
+  --spacing: 12px;
+  --font-family: "Inter", sans-serif;
+}
+
+/* :root {
+  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  color-scheme: light dark;
+  color: rgba(255, 255, 255, 0.87);
+  background-color: #242424;
 
 :root {
   --color-primary-text: 51, 37, 0;
@@ -57,6 +80,20 @@ ul {
   list-style: none;
 }
 
+@media (prefers-color-scheme: light) {
+  :root {
+    color: #213547;
+    background-color: #ffffff;
+  }
+  a:hover {
+    color: #747bff;
+  }
+  button {
+    background-color: #f9f9f9;
+  }
+} */
+
 svg {
   fill: currentColor;
 }
+

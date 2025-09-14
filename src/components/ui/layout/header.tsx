@@ -9,12 +9,20 @@ function Header() {
     <header className="header">
       <Link to="/">
         <div className="header-logo">
-          <GoodReaders />
+
+          <GoodReadersIcon />
         </div>
       </Link>
+
       <nav className="header-nav">
-        <Link to="/books/new">Add New Book</Link>
-        <AuthButton />
+        <NavLink to="/new-user" className="header-nav">
+          Create user
+        </NavLink>
+         <NavLink to="/books/new">Add new book<NavLink />
+         <AuthButton />
+        <NavLink to="login" className="header-nav">
+          Login
+        </NavLink>
       </nav>
     </header>
   );
