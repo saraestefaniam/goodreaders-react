@@ -1,4 +1,4 @@
-import { client } from "../../api/client"; // Tipo Book para tipado
+//import { client } from "../../api/client"; // Tipo Book para tipado
 import type { Genre } from "./genres-type";
 import type { Book } from "./type";
 
