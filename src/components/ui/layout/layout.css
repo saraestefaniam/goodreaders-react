@@ -1,0 +1,29 @@
+.layout-main {
+  max-width: 900px;
+  min-height: calc(100vh - 128px);
+  margin: 0 auto;
+  border-style: solid;
+  border-color: #e0d6c7;
+  background-color: #fffaf3;
+  /* fondo crema suave */
+}
+
+@media (max-width: 660px) {
+  .layout-main {
+    border-style: none;
+  }
+}
+
+.layout-title {
+  align-items: center;
+  justify-content: center;
+  display: flex;
+  height: 64px;
+  padding: 0 15px;
+  border-bottom: 1px solid #e0d6c7;
+  font-size: 28px;
+  font-family: "Georgia", serif;
+  color: #4a3c2a;
+  text-align: center;
+  margin-bottom: 1rem;
+}
