@@ -13,10 +13,10 @@ const LoginPage = () => {
   };
 
   return (
-    <div>
-      <div>
-        <h1>Login</h1>
-        <form onSubmit={handleSubmit}>
+    <div className="flex items-center justify-center min-h-screen bg-[var(--color-bg)]">
+      <h1 className="text-2xl font-bold text-center text-[var(--color-primary)] mb-6">Login</h1>
+      <div className="w-full max-w-md p-8 bg-white rounded-lg shadow-md">
+        <form className="space-y-4" onSubmit={handleSubmit}>
           <div>
             <FormField
               label="User"

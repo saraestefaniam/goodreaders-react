@@ -13,7 +13,7 @@ const CreateUserPage = () => {
   };
 
   return (
-    <div>
+    <div className="bg-red-500">
       <h1>Create your user!</h1>
       <div>
         <form onSubmit={handleSubmit}>

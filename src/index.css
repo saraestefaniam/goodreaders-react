@@ -1,3 +1,20 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* src/styles/variables.css */
+:root {
+  --color-primary: #721422;
+  --color-primary-hover: #e0245e;
+  --color-bg: #fff0f5;
+  --color-text: #333;
+  --cards: #
+  --border-radius: 8px;
+  --spacing: 12px;
+  --font-family: "Inter", sans-serif;
+}
+
+
 /* :root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;

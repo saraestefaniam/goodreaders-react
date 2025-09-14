@@ -3,7 +3,7 @@ import Footer from "./footer";
 import Header from "./header";
 import "./layout.css";
 import { Outlet } from "react-router-dom";
-import ErrorBoundary from "../errors/error-boundary"
+import ErrorBoundary from "../errors/error-boundary";
 
 function Layout() {
   return (
