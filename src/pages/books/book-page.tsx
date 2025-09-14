@@ -45,24 +45,45 @@ function BookPage() {
     <Page title="Book detail">
       {book && (
         <>
-          <article className="book-item" style={{ maxWidth: 400, margin: "0 auto" }}>
-            <img src={book.cover || "/descarga.png"} alt={book.title} className="book-item-image" />
+          <article
+            className="book-item"
+            style={{ maxWidth: 400, margin: "0 auto" }}
+          >
+            <img
+              src={book.cover || "/descarga.png"}
+              alt={book.title}
+              className="book-item-image"
+            />
             <div className="book-item-details">
               <h2 className="book-item-title">{book.title}</h2>
               <p className="book-item-author">{book.author}</p>
               <div className="book-item-tags">
                 {book.genre.map((g) => (
-                  <span key={g} className="book-item-tag">{g}</span>
+                  <span key={g} className="book-item-tag">
+                    {g}
+                  </span>
                 ))}
               </div>
-              {book.description && <p className="book-item-description">{book.description}</p>}
-              <p className="book-item-status">{book.wantToRead ? "Want to read" : "Already read"}</p>
+              {book.description && (
+                <p className="book-item-description">{book.description}</p>
+              )}
+              <p className="book-item-status">
+                {book.wantToRead ? "Want to read" : "Already read"}
+              </p>
               <div className="book-item-rating" title={`${book.rating}/5`}>
                 {"★".repeat(book.rating) + "☆".repeat(5 - book.rating)}
               </div>
             </div>
-            <div style={{ display: "flex", justifyContent: "flex-start", padding: "1rem" }}>
-              <Button variant="primary" onClick={() => setShowConfirm(true)}>Delete</Button>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "flex-start",
+                padding: "1rem",
+              }}
+            >
+              <Button variant="primary" onClick={() => setShowConfirm(true)}>
+                Delete
+              </Button>
             </div>
           </article>
 

@@ -2,7 +2,7 @@ import { client } from "../../api/client"; // Tipo Book para tipado
 import type { Genre } from "./genres-type";
 import type { Book } from "./type";
 
-const BOOKS_URL = "/api/books"; // hay que ajustarla segun backend 
+const BOOKS_URL = "/api/books"; // hay que ajustarla segun backend
 
 // GET lista
 export const getBooks = async () => {
@@ -18,7 +18,8 @@ export const getBook = async (bookId: string) => {
 
 // POST
 export const createBook = async (bookData: FormData) => {
-  const response = await client.post(BOOKS_URL, bookData, { // ajustarlo a lo que envie el backend
+  const response = await client.post(BOOKS_URL, bookData, {
+    // ajustarlo a lo que envie el backend
     headers: {
       "Content-Type": "multipart/form-data",
     },
@@ -31,7 +32,6 @@ export const deleteBook = async (bookId: string) => {
   const url = `${BOOKS_URL}/${bookId}`;
   await client.delete(url);
 };
-
 
 // Get Genres
 export const getGenres = async () => {

@@ -27,7 +27,7 @@ function BooksPage() {
         const booksFromApi = await getBooks();
         const genresFromApi = await getGenres();
         const validGenres = genresFromApi.filter((g): g is Genre =>
-          VALID_GENRES.includes(g as Genre)
+          VALID_GENRES.includes(g as Genre),
         );
         setBooks(booksFromApi);
         setAvailableGenres(validGenres);
@@ -38,7 +38,9 @@ function BooksPage() {
   }, []);
 
   const filteredBooks = books.filter((book) =>
-    filterGenres.length ? filterGenres.every((g) => book.genre.includes(g)) : true
+    filterGenres.length
+      ? filterGenres.every((g) => book.genre.includes(g))
+      : true,
   );
 
   return (
@@ -55,7 +57,7 @@ function BooksPage() {
                   setFilterGenres((prev) =>
                     prev.includes(genre)
                       ? prev.filter((g) => g !== genre)
-                      : [...prev, genre]
+                      : [...prev, genre],
                   )
                 }
               />
