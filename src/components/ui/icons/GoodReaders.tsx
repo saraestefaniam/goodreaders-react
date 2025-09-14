@@ -1,4 +1,4 @@
-//import React from "react"; // 👈 necesario para JSX si el linter lo pide
+import React from "react"; // 👈 necesario para JSX si el linter lo pide
 import type { SVGProps } from "react";
 
 const GoodReadersIcon = (props: SVGProps<SVGSVGElement>) => (
