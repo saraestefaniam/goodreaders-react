@@ -49,6 +49,15 @@ const CreateUserPage = () => {
             placeholder="Write your password again"
             required
           />
+          <FormField
+            label="Avatar"
+            name="avatar"
+            type="file"
+            accept="image/"
+            onChange={handleChange}
+            placeholder="Upload your avatar"
+            required
+          />
           <Button type="submit" variant="primary">
             Create user
           </Button>

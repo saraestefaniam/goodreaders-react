@@ -1,8 +1,7 @@
 import React from "react";
-import GoodReaders from "../icons/GoodReaders.tsx";
-import AuthButton from "../../../pages/auth/auth-button.tsx";
 import "./header.css";
-import { Link } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
+import GoodReadersIcon from "../icons/GoodReaders.tsx";
 
 function Header() {
   return (
@@ -18,8 +17,7 @@ function Header() {
         <NavLink to="/new-user" className="header-nav">
           Create user
         </NavLink>
-         <NavLink to="/books/new">Add new book<NavLink />
-         <AuthButton />
+         <NavLink to="/books/new">Add new book</NavLink>
         <NavLink to="login" className="header-nav">
           Login
         </NavLink>
