@@ -43,7 +43,7 @@ const CreateUserPage = () => {
           />
           <FormField
             label="Repeat password"
-            name="password"
+            name="password-again"
             value={""}
             onChange={handleChange}
             placeholder="Write your password again"
