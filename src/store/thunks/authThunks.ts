@@ -11,7 +11,7 @@ interface LoginPayload {
 interface CreateUserPayload {
   name: string;
   email: string;
-  passowrd: string;
+  password: string;
   avatar?: string;
 }
 
