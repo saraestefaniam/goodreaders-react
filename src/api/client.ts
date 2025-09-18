@@ -5,11 +5,11 @@ const api = axios.create({
 });
 
 export const setAuthorizationHeader = (accesToken: string) => {
-  api.defaults.headers.common["Authorization"] = `Bearer ${accesToken}`
-}
+  api.defaults.headers.common["Authorization"] = `Bearer ${accesToken}`;
+};
 
 export const removeAuthorizationHeader = () => {
-  delete api.defaults.headers.common["Authorization"]
-}
+  delete api.defaults.headers.common["Authorization"];
+};
 
 export default api;
