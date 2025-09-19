@@ -13,17 +13,21 @@ const CreateUserPage = () => {
     email: "",
     password: "",
     passwordAgain: "",
-    avatar: "",
   });
 
+  const [avatarFile, setAvatarFile] = useState<File | null>(null);
   const [passwordError, setPasswordError] = useState<string | null>(null);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, files } = event.target;
-    setForm((prev) => ({
-      ...prev,
-      [name]: files ? files[0] : value,
-    }));
+    if (name === "avatar" && files) {
+      setAvatarFile(files[0]);
+    } else {
+      setForm((prev) => ({
+        ...prev,
+        [name]: value,
+      }));
+    }
   };
 
   const passwordValidator = () => {
@@ -35,10 +39,30 @@ const CreateUserPage = () => {
     return true;
   };
 
-  const handleSubmit = (event: React.FormEvent) => {
+  const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     if (!passwordValidator()) return;
-    dispatch(createUser(form));
+
+    let avatarBase64 = undefined;
+
+    if (avatarFile) {
+      const reader = new FileReader()
+      const filePromise = new Promise<string>((resolve, reject) => {
+        reader.onloadend = () => {
+          resolve(reader.result as string)
+        }
+        reader.onerror = reject
+      })
+      reader.readAsDataURL(avatarFile)
+      avatarBase64 = await filePromise
+    }
+    const formData = {
+      name: form.name,
+      email: form.email,
+      password: form.password,
+      avatar: avatarBase64
+    }
+    dispatch(createUser(formData));
   };
 
   return (
