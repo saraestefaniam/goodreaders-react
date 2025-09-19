@@ -1,7 +1,17 @@
 import FormField from "../../components/ui/form-field";
 import Button from "../../components/ui/button";
+import { useAppDispatch, useAppSelector } from "../../store/hooks";
+import { useState } from "react";
 
 const LoginPage = () => {
+  const dispatch = useAppDispatch();
+  const { loading, error } = useAppSelector((state) => state.auth);
+
+  const [form, setForm] = useState({
+    email: "",
+    password: "",
+  });
+
   const handleChange = (event: React.FormEvent) => {
     event.preventDefault();
     return;
@@ -13,17 +23,19 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-[var(--color-bg)]">
-      <h1 className="text-2xl font-bold text-center text-[var(--color-primary)] mb-6">Login</h1>
-      <div className="w-full max-w-md p-8 bg-white rounded-lg shadow-md">
+    <div className="flex min-h-screen items-center justify-center bg-[var(--color-bg)]">
+      <div className="w-full max-w-md rounded-lg bg-white p-8 shadow-md">
+        <h1 className="mb-6 text-center text-2xl font-bold text-[var(--color-primary)]">
+          Login
+        </h1>
         <form className="space-y-4" onSubmit={handleSubmit}>
           <div>
             <FormField
-              label="User"
-              name="username"
+              label="Email"
+              name="email"
               value={""} //pendiente
               onChange={handleChange}
-              placeholder="username"
+              placeholder="email"
               required
             />
             <br />
@@ -32,7 +44,7 @@ const LoginPage = () => {
               name="password"
               value={""} //pendiente
               onChange={handleChange}
-              placeholder="username"
+              placeholder="password"
               required
             />
           </div>
@@ -41,8 +53,10 @@ const LoginPage = () => {
               type="checkbox"
               //checked={""} //debería ser la función rememberUser
               //onChange={(event) => setRememberUser(event.target.checked)}
-            />
+            />{" "}
+            Remember me
           </label>
+          <br />
           <Button type="submit" variant="primary">
             Create user
           </Button>
