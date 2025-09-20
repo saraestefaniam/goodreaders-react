@@ -3,6 +3,8 @@ import Button from "../../components/ui/button";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import { useState } from "react";
 import { createUser } from "../../store/thunks/authThunks";
+import Page from "../../components/ui/layout/page";
+import "./auth.css";
 
 const CreateUserPage = () => {
   const dispatch = useAppDispatch();
@@ -46,78 +48,125 @@ const CreateUserPage = () => {
     let avatarBase64 = undefined;
 
     if (avatarFile) {
-      const reader = new FileReader()
+      const reader = new FileReader();
       const filePromise = new Promise<string>((resolve, reject) => {
         reader.onloadend = () => {
-          resolve(reader.result as string)
-        }
-        reader.onerror = reject
-      })
-      reader.readAsDataURL(avatarFile)
-      avatarBase64 = await filePromise
+          resolve(reader.result as string);
+        };
+        reader.onerror = reject;
+      });
+      reader.readAsDataURL(avatarFile);
+      avatarBase64 = await filePromise;
     }
     const formData = {
       name: form.name,
       email: form.email,
       password: form.password,
-      avatar: avatarBase64
-    }
+      avatar: avatarBase64,
+    };
     dispatch(createUser(formData));
   };
 
   return (
-    <div className="bg-red-500">
-      <h1>Create your user!</h1>
-      <div>
-        <form onSubmit={handleSubmit}>
-          <FormField
-            label="User"
-            name="name"
-            value={form.name}
-            onChange={handleChange}
-            placeholder="Write your username"
-            required
-          />
-          <FormField
-            label="Email"
-            name="email"
-            value={form.email}
-            onChange={handleChange}
-            placeholder="example@email.com"
-            required
-          />
-          <FormField
-            label="Password"
-            name="password"
-            value={form.password}
-            onChange={handleChange}
-            placeholder="Write your password"
-            required
-          />
-          <FormField
-            label="Repeat password"
-            name="passwordAgain"
-            value={form.passwordAgain}
-            onChange={handleChange}
-            placeholder="Write your password again"
-            required
-          />
-          <FormField
-            label="Avatar"
-            name="avatar"
-            type="file"
-            accept="image/"
-            onChange={handleChange}
-            placeholder="Upload your avatar"
-          />
-          <Button type="submit" variant="primary" disabled={loading}>
-            {loading ? "Creating user..." : "Create user"}
-          </Button>
-          {error && <p>{error}</p>}
-          {passwordError && <p className="text-red-500">{passwordError}</p>}
-        </form>
+    <Page title="">
+      <div className="auth-page">
+        <div className="auth-card">
+          <h1 className="auth-title">Create your account</h1>
+
+          {error && <div className="auth-alert">{error}</div>}
+          {passwordError && <div className="auth-alert">{passwordError}</div>}
+
+          <form className="auth-form" onSubmit={handleSubmit}>
+            <div>
+              <label htmlFor="name" className="auth-label">
+                Username
+              </label>
+              <FormField
+                id="name"
+                name="name"
+                type="text"
+                value={form.name}
+                onChange={handleChange}
+                placeholder="Your username"
+                required
+              />
+            </div>
+
+            <div>
+              <label htmlFor="email" className="auth-label">
+                Email
+              </label>
+              <FormField
+                id="email"
+                name="email"
+                type="email"
+                value={form.email}
+                onChange={handleChange}
+                placeholder="you@example.com"
+                required
+              />
+            </div>
+
+            <div>
+              <label htmlFor="password" className="auth-label">
+                Password
+              </label>
+              <FormField
+                id="password"
+                name="password"
+                type="password"
+                value={form.password}
+                onChange={handleChange}
+                placeholder="••••••••"
+                required
+                minLength={6}
+              />
+            </div>
+
+            <div>
+              <label htmlFor="passwordAgain" className="auth-label">
+                Repeat password
+              </label>
+              <FormField
+                id="passwordAgain"
+                name="passwordAgain"
+                type="password"
+                value={form.passwordAgain}
+                onChange={handleChange}
+                placeholder="••••••••"
+                required
+                minLength={6}
+              />
+            </div>
+
+            <div>
+              <label htmlFor="avatar" className="auth-label">
+                Avatar (optional)
+              </label>
+              <input
+                id="avatar"
+                name="avatar"
+                type="file"
+                accept="image/*"
+                onChange={handleChange}
+                className="auth-input"
+              />
+            </div>
+
+            <div className="auth-actions">
+              <Button
+                type="submit"
+                variant="primary"
+                disabled={loading}
+                className="auth-submit"
+              >
+                {loading ? "Creating user..." : "Create user"}
+              </Button>
+            </div>
+          </form>
+        </div>
       </div>
-    </div>
+    </Page>
   );
 };
 

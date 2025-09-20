@@ -1,16 +1,22 @@
+/* src/components/ui/layout/layout.css */
+.layout {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: rgb(var(--color-bg));
+}
+
 .layout-main {
   max-width: 900px;
   min-height: calc(100vh - 128px);
   margin: 0 auto;
-  border-style: solid;
-  border-color: #e0d6c7;
-  background-color: #fffaf3;
-  /* fondo crema suave */
+  border: 1px solid rgb(var(--color-border));
+  background-color: rgb(var(--color-bg));
 }
 
 @media (max-width: 660px) {
   .layout-main {
-    border-style: none;
+    border: none;
   }
 }
 
@@ -20,10 +26,10 @@
   display: flex;
   height: 64px;
   padding: 0 15px;
-  border-bottom: 1px solid #e0d6c7;
+  border-bottom: 1px solid rgb(var(--color-border));
   font-size: 28px;
   font-family: "Georgia", serif;
-  color: #4a3c2a;
+  color: rgb(var(--color-primary-text));
   text-align: center;
   margin-bottom: 1rem;
 }

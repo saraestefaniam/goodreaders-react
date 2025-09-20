@@ -5,7 +5,7 @@ import type { Genre } from "./genres-type";
 
 const BOOKS_URL = "/api/v1/books"; 
 
-// GET lista
+// GET lista 
 export const getBooks = async () => {
   const response = await api.get<Book[]>(BOOKS_URL);
   return response.data;

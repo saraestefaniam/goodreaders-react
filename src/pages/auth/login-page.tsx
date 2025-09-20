@@ -2,6 +2,7 @@ import FormField from "../../components/ui/form-field";
 import Button from "../../components/ui/button";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import { useState } from "react";
+import "./auth.css";
 
 const LoginPage = () => {
   const dispatch = useAppDispatch();

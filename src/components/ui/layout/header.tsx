@@ -1,4 +1,3 @@
-import React from "react";
 import "./header.css";
 import { Link, NavLink } from "react-router-dom";
 import GoodReadersIcon from "../icons/GoodReaders.tsx";
@@ -8,7 +7,6 @@ function Header() {
     <header className="header">
       <Link to="/">
         <div className="header-logo">
-
           <GoodReadersIcon />
         </div>
       </Link>
@@ -17,7 +15,7 @@ function Header() {
         <NavLink to="/new-user" className="header-nav">
           Create user
         </NavLink>
-         <NavLink to="/books/new">Add new book</NavLink>
+        <NavLink to="/books/new">Add new book</NavLink>
         <NavLink to="login" className="header-nav">
           Login
         </NavLink>
