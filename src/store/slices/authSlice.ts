@@ -23,7 +23,8 @@ const authSlice = createSlice({
     logout: (state) => {
       state.user = null;
       state.token = null;
-      localStorage.removeItem("accesToken");
+      localStorage.removeItem("accessToken");
+      sessionStorage.removeItem("accessToken");
     },
   },
   extraReducers: (builder) => {
@@ -33,7 +34,6 @@ const authSlice = createSlice({
     });
     builder.addCase(loginUser.fulfilled, (state, action) => {
       state.loading = false;
-      state.user = action.payload.user;
       state.token = action.payload.token;
     });
     builder.addCase(loginUser.rejected, (state, action) => {

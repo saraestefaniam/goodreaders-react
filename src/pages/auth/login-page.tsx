@@ -4,6 +4,7 @@ import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import { useState } from "react";
 import { loginUser } from "../../store/thunks/authThunks";
 import storage from "../../utils/storage";
+import {  useNavigate } from "react-router-dom";
 
 const LoginPage = () => {
   const dispatch = useAppDispatch();
@@ -17,6 +18,7 @@ const LoginPage = () => {
   const [rememberUser, setRememberUser] = useState(false);
 
   const disabled = !form.email || !form.password;
+  const navigate = useNavigate()
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
@@ -34,6 +36,7 @@ const LoginPage = () => {
     if (loginUser.fulfilled.match(response)) {
       const token = response.payload.token;
       storage.set("auth", token, rememberUser);
+      navigate("/", {replace: true})
     }
   };
 
