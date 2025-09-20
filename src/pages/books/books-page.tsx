@@ -7,7 +7,7 @@ import Page from "../../components/ui/layout/page";
 import Button from "../../components/ui/button";
 import BookItem from "./book-item";
 import { Link } from "react-router-dom";
-import "../../index.css"
+import "../../index.css";
 
 const EmptyList = () => (
   <div>
