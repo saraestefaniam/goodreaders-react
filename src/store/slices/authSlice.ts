@@ -11,7 +11,7 @@ interface AuthState {
 
 const initialState: AuthState = {
   user: null,
-  token: null,
+  token: localStorage.getItem("accessToken"),
   loading: false,
   error: null,
 };
@@ -35,6 +35,7 @@ const authSlice = createSlice({
     builder.addCase(loginUser.fulfilled, (state, action) => {
       state.loading = false;
       state.token = action.payload.token;
+      localStorage.setItem("accessToken", action.payload.token)
     });
     builder.addCase(loginUser.rejected, (state, action) => {
       state.loading = false;
