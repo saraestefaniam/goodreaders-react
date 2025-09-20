@@ -24,12 +24,10 @@
 
 .book-list {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-  gap: 16px;
-  padding-bottom: 24px;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 20px;
 }
 
-.book-list a {
-  text-decoration: none;
-  color: inherit;
+.filter-form {
+  margin-bottom: 16px;
 }

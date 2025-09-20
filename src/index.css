@@ -2,28 +2,17 @@
 @tailwind components;
 @tailwind utilities;
 
-/* src/styles/variables.css */
 :root {
-  --color-primary-text: 74, 60, 42;
-  --color-secondary-text: 51, 0, 25;
-  --color-accent: 114, 20, 34;
-  --color-link: 0, 99, 93;
-  --color-bg: 255, 250, 243;
-  --color-surface: 255, 255, 255;
-  --color-border: 224, 214, 199;
-  --color-danger: 190, 20, 70;
-
-  --radius-sm: 6px;
+  --text-primary: 17, 24, 39;
+  --text-muted: 107, 114, 128;
+  --accent: 64, 157, 105;
+  --chrome-bg: 245, 246, 248;
+  --page-bg: 255, 255, 255;
+  --card-bg: 245, 246, 248;
+  --border: 229, 231, 235;
   --radius: 8px;
-  --radius-lg: 12px;
-  --space-1: 4px;
-  --space-2: 8px;
-  --space-3: 12px;
-  --space-4: 16px;
-  --shadow-sm: 0 1px 2px rgba(0, 0, 0, .05);
-  --shadow: 0 2px 8px rgba(0, 0, 0, .08);
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, .06);
 }
-
 
 * {
   box-sizing: border-box;
@@ -36,15 +25,18 @@ html {
 
 body {
   margin: 0;
-  color: rgb(var(--color-primary-text));
-  background: rgb(var(--color-bg));
-  font-family:
-    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu,
+  color: rgb(var(--text-primary));
+  background: rgb(var(--page-bg));
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu,
     Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
+a {
+  color: inherit;
+  text-decoration: none;
+}
 
 h1,
 h2,
@@ -54,37 +46,7 @@ h5,
 h6 {
   margin: 0;
   font-family: "Georgia", serif;
-  /* toque Goodreads en títulos */
 }
-
-
-a {
-  color: rgb(var(--color-link));
-  text-decoration: none;
-}
-
-a:hover {
-  text-decoration: underline;
-}
-
-
-input,
-textarea,
-select {
-  color: rgb(var(--color-primary-text));
-  background: #fff;
-  border: 1px solid rgb(var(--color-border));
-  border-radius: var(--radius);
-}
-
-input:focus,
-textarea:focus,
-select:focus {
-  outline: none;
-  box-shadow: 0 0 0 2px rgba(var(--color-accent), .15);
-  border-color: rgba(var(--color-accent), .6);
-}
-
 
 ul {
   margin: 0;
@@ -92,26 +54,19 @@ ul {
   list-style: none;
 }
 
-svg {
-  fill: currentColor;
-}
-
-
-.card {
-  background: rgb(var(--color-surface));
-  border: 1px solid rgb(var(--color-border));
+input,
+textarea,
+select {
+  color: rgb(var(--text-primary));
+  background: #fff;
+  border: 1px solid rgb(var(--border));
   border-radius: var(--radius);
-  box-shadow: var(--shadow-sm);
 }
 
-.text-secondary {
-  color: rgb(var(--color-secondary-text));
-}
-
-.border-soft {
-  border-color: rgb(var(--color-border));
-}
-
-.bg-cream {
-  background: rgb(var(--color-bg));
+input:focus,
+textarea:focus,
+select:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(var(--accent), .15);
+  border-color: rgba(var(--accent), .6);
 }

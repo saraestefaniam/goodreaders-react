@@ -1,35 +1,39 @@
-/* src/components/ui/layout/layout.css */
 .layout {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  background: rgb(var(--color-bg));
+  background: rgb(var(--page-bg));
 }
 
 .layout-main {
-  max-width: 900px;
+  width: 100%;
+  max-width: 1120px;
   min-height: calc(100vh - 128px);
   margin: 0 auto;
-  border: 1px solid rgb(var(--color-border));
-  background-color: rgb(var(--color-bg));
+  padding: 16px;
+  border: 0;
+  background: rgb(var(--page-bg));
 }
 
-@media (max-width: 660px) {
+@media (max-width: 768px) {
   .layout-main {
-    border: none;
+    padding: 12px;
   }
 }
 
 .layout-title {
+  display: flex;
   align-items: center;
   justify-content: center;
-  display: flex;
   height: 64px;
   padding: 0 15px;
-  border-bottom: 1px solid rgb(var(--color-border));
+  border-bottom: 1px solid rgb(var(--border));
   font-size: 28px;
   font-family: "Georgia", serif;
-  color: rgb(var(--color-primary-text));
-  text-align: center;
+  color: rgb(var(--text-primary));
   margin-bottom: 1rem;
+}
+
+.layout-title:empty {
+  display: none;
 }

@@ -1,8 +1,9 @@
-/* src/pages/auth/auth.css */
 .auth-page {
+  min-height: calc(100vh - 128px);
   display: flex;
+  align-items: center;
   justify-content: center;
-  padding: 32px 16px;
+  padding: 16px;
 }
 
 .auth-card {

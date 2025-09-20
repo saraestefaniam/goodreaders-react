@@ -1,0 +1,50 @@
+.btn {
+  cursor: pointer;
+  border: 1px solid transparent;
+  border-radius: 9999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  min-height: 36px;
+  min-width: 96px;
+  padding: 0 24px;
+  outline: none;
+  text-decoration: none;
+  transition: filter .15s ease, background-color .15s ease, border-color .15s ease;
+}
+
+.btn--primary {
+  background: rgb(var(--accent));
+  color: #fff;
+  border-color: rgb(var(--accent));
+}
+
+.btn--primary:hover {
+  filter: brightness(.95);
+}
+
+.btn--primary:focus-visible {
+  outline: 2px solid rgba(var(--accent), .35);
+  outline-offset: 2px;
+}
+
+.btn--secondary {
+  background: #fff;
+  color: rgb(var(--accent));
+  border-color: rgb(var(--accent));
+}
+
+.btn--secondary:hover {
+  background: rgba(var(--accent), .08);
+}
+
+.btn--secondary:focus-visible {
+  outline: 2px solid rgba(var(--accent), .25);
+  outline-offset: 2px;
+}
+
+.btn--disabled {
+  opacity: .5;
+  pointer-events: none;
+}

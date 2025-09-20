@@ -15,10 +15,13 @@ const BookItem = ({ book }: BookItemProps) => {
         src={cover || "/descarga.png"}
         alt={title}
         className="book-item-image"
+        loading="lazy"
       />
+
       <div className="book-item-details">
         <h2 className="book-item-title">{title}</h2>
         <p className="book-item-author">by {author}</p>
+
         <div
           className="book-item-rating"
           aria-label={`Rating: ${rating} out of 5`}
@@ -26,6 +29,7 @@ const BookItem = ({ book }: BookItemProps) => {
         >
           {stars}
         </div>
+
         <div className="book-item-genres">
           {genre.map((g) => (
             <span key={g} className="book-item-genre">
@@ -33,9 +37,10 @@ const BookItem = ({ book }: BookItemProps) => {
             </span>
           ))}
         </div>
-        <p className="book-item-status">
-          {wantToRead ? "Want to read" : "Already read"}
-        </p>
+
+        <span className="book-item-status">
+          {wantToRead ? "Want to Read" : "Already read"}
+        </span>
       </div>
     </article>
   );
