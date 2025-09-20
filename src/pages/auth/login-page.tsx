@@ -2,6 +2,8 @@ import FormField from "../../components/ui/form-field";
 import Button from "../../components/ui/button";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import { useState } from "react";
+import { loginUser } from "../../store/thunks/authThunks";
+import storage from "../../utils/storage";
 
 const LoginPage = () => {
   const dispatch = useAppDispatch();
@@ -12,14 +14,27 @@ const LoginPage = () => {
     password: "",
   });
 
-  const handleChange = (event: React.FormEvent) => {
+  const [rememberUser, setRememberUser] = useState(false);
+
+  const disabled = !form.email || !form.password;
+
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = event.target;
+    setForm((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
     event.preventDefault();
     return;
   };
 
-  const handleSubmit = (event: React.FormEvent) => {
+  const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
-    return;
+    const response = await dispatch(loginUser(form));
+    if (loginUser.fulfilled.match(response)) {
+      const token = response.payload.token;
+      storage.set("auth", token, rememberUser);
+    }
   };
 
   return (
@@ -33,7 +48,7 @@ const LoginPage = () => {
             <FormField
               label="Email"
               name="email"
-              value={""} //pendiente
+              value={form.email}
               onChange={handleChange}
               placeholder="email"
               required
@@ -42,7 +57,7 @@ const LoginPage = () => {
             <FormField
               label="Password"
               name="password"
-              value={""} //pendiente
+              value={form.password}
               onChange={handleChange}
               placeholder="password"
               required
@@ -51,15 +66,16 @@ const LoginPage = () => {
           <label>
             <input
               type="checkbox"
-              //checked={""} //debería ser la función rememberUser
-              //onChange={(event) => setRememberUser(event.target.checked)}
+              checked={rememberUser}
+              onChange={(event) => setRememberUser(event.target.checked)}
             />{" "}
             Remember me
           </label>
           <br />
-          <Button type="submit" variant="primary">
-            Create user
+          <Button type="submit" variant="primary" disabled={disabled}>
+            {loading ? "Login in..." : "Login"}
           </Button>
+          {error && <p>{error}</p>}
         </form>
       </div>
     </div>

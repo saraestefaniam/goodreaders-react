@@ -35,7 +35,6 @@ const authSlice = createSlice({
       state.loading = false;
       state.user = action.payload.user;
       state.token = action.payload.token;
-      localStorage.setItem("accesToken", action.payload.token);
     });
     builder.addCase(loginUser.rejected, (state, action) => {
       state.loading = false;

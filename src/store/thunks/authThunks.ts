@@ -23,7 +23,7 @@ export const loginUser = createAsyncThunk(
       return response.data;
     } catch (error) {
       if (axios.isAxiosError(error) && error.response) {
-        rejectWithValue(error.response.data.message || "Error login");
+        return rejectWithValue(error.response.data.message || "Error login");
       }
       return rejectWithValue("Something went wrong");
     }
