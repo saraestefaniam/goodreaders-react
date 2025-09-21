@@ -82,6 +82,7 @@ const CreateUserPage = () => {
                 Username
               </label>
               <FormField
+                label="Username"
                 id="name"
                 name="name"
                 type="text"
@@ -97,6 +98,7 @@ const CreateUserPage = () => {
                 Email
               </label>
               <FormField
+                label="Email"
                 id="email"
                 name="email"
                 type="email"
@@ -112,6 +114,7 @@ const CreateUserPage = () => {
                 Password
               </label>
               <FormField
+                label="Password"
                 id="password"
                 name="password"
                 type="password"
@@ -128,6 +131,7 @@ const CreateUserPage = () => {
                 Repeat password
               </label>
               <FormField
+                label="Repeat password"
                 id="passwordAgain"
                 name="passwordAgain"
                 type="password"
