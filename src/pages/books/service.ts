@@ -25,7 +25,6 @@ export const createBook = async (payload: {
   review: string;
   cover?: string;        
   genre: string[];
-  wantToRead?: boolean;  
   rating: number;        
 }) => {
   const res = await api.post<Book>(BOOKS_URL, payload); // JSON, no FormData

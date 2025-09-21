@@ -10,7 +10,6 @@ export interface Book {
   review: string;
   cover?: string;
   genre: Genre[];
-  wantToRead: boolean;
   rating: Rating;
   createdAt: string;
   updatedAt: string;

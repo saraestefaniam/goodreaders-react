@@ -6,7 +6,7 @@ interface BookItemProps {
 }
 
 const BookItem = ({ book }: BookItemProps) => {
-  const { title, author, genre, cover, wantToRead, rating } = book;
+  const { title, author, genre, cover, rating } = book;
   const stars = "★".repeat(rating) + "☆".repeat(5 - rating);
 
   return (
@@ -37,10 +37,6 @@ const BookItem = ({ book }: BookItemProps) => {
             </span>
           ))}
         </div>
-
-        <span className="book-item-status">
-          {wantToRead ? "Want to Read" : "Already read"}
-        </span>
       </div>
     </article>
   );
