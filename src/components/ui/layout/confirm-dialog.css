@@ -1,0 +1,42 @@
+.confirm-dialog-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+
+.confirm-dialog-box {
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  max-width: 300px;
+  text-align: center;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+.confirm-dialog-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 1rem;
+}
+
+.btn-primary {
+  background: #721422;
+  color: white;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+.btn-secondary {
+  background: #f8e6e9;
+  color: #721422;
+  padding: 0.5rem 1rem;
+  border: 1px solid #721422;
+  border-radius: 999px;
+  cursor: pointer;
+}

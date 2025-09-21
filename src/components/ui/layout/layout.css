@@ -1,0 +1,39 @@
+.layout {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: rgb(var(--page-bg));
+}
+
+.layout-main {
+  width: 100%;
+  max-width: 1120px;
+  min-height: calc(100vh - 128px);
+  margin: 0 auto;
+  padding: 16px;
+  border: 0;
+  background: rgb(var(--page-bg));
+}
+
+@media (max-width: 768px) {
+  .layout-main {
+    padding: 12px;
+  }
+}
+
+.layout-title {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 64px;
+  padding: 0 15px;
+  border-bottom: 1px solid rgb(var(--border));
+  font-size: 28px;
+  font-family: "Georgia", serif;
+  color: rgb(var(--text-primary));
+  margin-bottom: 1rem;
+}
+
+.layout-title:empty {
+  display: none;
+}

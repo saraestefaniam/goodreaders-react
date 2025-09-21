@@ -1,0 +1,33 @@
+.filter-form {
+  background: rgb(var(--color-bg));
+  border: 1px solid rgb(var(--color-border));
+  border-radius: 6px;
+  padding: 10px 12px;
+  margin-bottom: 16px;
+}
+
+.filter-tags {
+  display: flex;
+  align-items: center;
+  gap: 10px 14px;
+  flex-wrap: wrap;
+  font-size: 14px;
+  color: rgb(var(--color-primary-text));
+}
+
+.filter-tag-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+
+.book-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 20px;
+}
+
+.filter-form {
+  margin-bottom: 16px;
+}
