@@ -11,7 +11,7 @@ interface AuthState {
 
 const initialState: AuthState = {
   user: null,
-  token: null,
+  token: localStorage.getItem("accessToken"),
   loading: false,
   error: null,
 };
@@ -23,7 +23,8 @@ const authSlice = createSlice({
     logout: (state) => {
       state.user = null;
       state.token = null;
-      localStorage.removeItem("accesToken");
+      localStorage.removeItem("accessToken");
+      sessionStorage.removeItem("accessToken");
     },
   },
   extraReducers: (builder) => {
@@ -33,9 +34,8 @@ const authSlice = createSlice({
     });
     builder.addCase(loginUser.fulfilled, (state, action) => {
       state.loading = false;
-      state.user = action.payload.user;
       state.token = action.payload.token;
-      localStorage.setItem("accesToken", action.payload.token);
+      localStorage.setItem("accessToken", action.payload.token)
     });
     builder.addCase(loginUser.rejected, (state, action) => {
       state.loading = false;
