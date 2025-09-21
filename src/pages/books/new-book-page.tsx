@@ -6,6 +6,7 @@ import { createBook, getGenres } from "./service";
 import type { Genre } from "./genres-type";
 import { AxiosError } from "axios";
 import FormField from "../../components/ui/form-field";
+import ErrorBoundary from "../../components/ui/errors/error-boundary";
 import "./new-book-page.css";
 
 function NewBookPage() {
@@ -17,7 +18,6 @@ function NewBookPage() {
     review: string;
     cover: string;
     genre: Genre[];
-    wantToRead: boolean;
     rating: number;
   }>({
     title: "",
@@ -26,7 +26,6 @@ function NewBookPage() {
     review: "",
     cover: "",
     genre: [],
-    wantToRead: false,
     rating: 1,
   });
   const [submitting, setSubmitting] = useState(false);
@@ -44,10 +43,6 @@ function NewBookPage() {
     (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
       setForm((prev) => ({ ...prev, [field]: e.target.value }));
     };
-
-  const handleToggleWantToRead = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setForm((prev) => ({ ...prev, wantToRead: e.target.checked }));
-  };
 
   const handleRatingChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setForm((prev) => ({ ...prev, rating: Number(e.target.value) }));
@@ -77,7 +72,6 @@ function NewBookPage() {
         review: form.review.trim(),
         ...(form.cover.trim() ? { cover: form.cover.trim() } : {}),
         genre: form.genre,
-        wantToRead: form.wantToRead,
         rating: form.rating,
       };
       await createBook(payload);
@@ -105,148 +99,141 @@ function NewBookPage() {
 
   return (
     <Page title="Add a new book">
-      {errorMsg && (
-        <div role="alert" className="new-book-page-alert">
-          {errorMsg}
-        </div>
-      )}
+      <ErrorBoundary>
+        {errorMsg && (
+          <div role="alert" className="new-book-page-alert">
+            {errorMsg}
+          </div>
+        )}
 
-      <form onSubmit={handleSubmit} className="new-book-page-form">
-        <div>
-          <FormField
-            label="Title *"
-            id="title"
-            type="text"
-            value={form.title}
-            onChange={handleChange("title")}
-            required
-            placeholder="The Way of Kings"
-            className="new-book-page-input"
-          />
-        </div>
-
-        <div>
-          <FormField
-            label="Author *"
-            id="author"
-            type="text"
-            value={form.author}
-            onChange={handleChange("author")}
-            required
-            placeholder="Brandon Sanderson"
-            className="new-book-page-input"
-          />
-        </div>
-
-        <div>
-          <label className="new-book-page-label" htmlFor="description">
-            Description
-            <textarea
-              id="description"
-              value={form.description}
-              onChange={handleChange("description")}
-              placeholder="Short synopsis or personal notes..."
-              rows={4}
-              className="new-book-page-textarea"
-            />
-          </label>
-        </div>
-
-        <div>
-          <label className="new-book-page-label" htmlFor="review">
-            Review *
-            <textarea
-              id="review"
-              value={form.review}
-              onChange={handleChange("review")}
+        <form onSubmit={handleSubmit} className="new-book-page-form">
+          <div>
+            <FormField
+              label="Title *"
+              id="title"
+              type="text"
+              value={form.title}
+              onChange={handleChange("title")}
               required
-              placeholder="What did you think of the book?"
-              rows={4}
-              className="new-book-page-textarea"
+              placeholder="The Way of Kings"
+              className="new-book-page-input"
             />
-          </label>
-        </div>
+          </div>
 
-        <div>
-          <FormField
-            label="Cover (URL)"
-            id="cover"
-            type="url"
-            value={form.cover}
-            onChange={handleChange("cover")}
-            placeholder="https://images.example.com/my-cover.jpg"
-            className="new-book-page-input"
-          />
-        </div>
-
-        <fieldset className="new-book-page-fieldset">
-          <legend className="new-book-page-legend">Genres *</legend>
-          {availableGenres.length === 0 ? (
-            <p style={{ margin: 0, opacity: 0.7 }}>Loading genres…</p>
-          ) : (
-            <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
-              {availableGenres.map((g) => (
-                <label key={g} className="new-book-page-checkbox">
-                  <input
-                    type="checkbox"
-                    checked={form.genre.includes(g)}
-                    onChange={() => handleToggleGenre(g)}
-                  />
-                  <span>#{g}</span>
-                </label>
-              ))}
-            </div>
-          )}
-        </fieldset>
-
-        <div>
-          <label className="new-book-page-checkbox">
-            <input
-              type="checkbox"
-              checked={form.wantToRead}
-              onChange={handleToggleWantToRead}
-            />
-            Want to read
-          </label>
-        </div>
-
-        <div>
-          <label className="new-book-page-label" htmlFor="rating">
-            Rating (1-5) *
-            <select
-              id="rating"
-              value={form.rating}
-              onChange={handleRatingChange}
+          <div>
+            <FormField
+              label="Author *"
+              id="author"
+              type="text"
+              value={form.author}
+              onChange={handleChange("author")}
               required
-              className="new-book-page-select"
+              placeholder="Brandon Sanderson"
+              className="new-book-page-input"
+            />
+          </div>
+
+          <div>
+            <label className="new-book-page-label" htmlFor="description">
+              Description
+              <textarea
+                id="description"
+                value={form.description}
+                onChange={handleChange("description")}
+                placeholder="Short synopsis or personal notes..."
+                rows={4}
+                className="new-book-page-textarea"
+              />
+            </label>
+          </div>
+
+          <div>
+            <label className="new-book-page-label" htmlFor="review">
+              Review *
+              <textarea
+                id="review"
+                value={form.review}
+                onChange={handleChange("review")}
+                required
+                placeholder="What did you think of the book?"
+                rows={4}
+                className="new-book-page-textarea"
+              />
+            </label>
+          </div>
+
+          <div>
+            <FormField
+              label="Cover (URL)"
+              id="cover"
+              type="url"
+              value={form.cover}
+              onChange={handleChange("cover")}
+              placeholder="https://images.example.com/my-cover.jpg"
+              className="new-book-page-input"
+            />
+          </div>
+
+          <fieldset className="new-book-page-fieldset">
+            <legend className="new-book-page-legend">Genres *</legend>
+            <ErrorBoundary>
+              {availableGenres.length === 0 ? (
+                <p style={{ margin: 0, opacity: 0.7 }}>Loading genres…</p>
+              ) : (
+                <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
+                  {availableGenres.map((g) => (
+                    <label key={g} className="new-book-page-checkbox">
+                      <input
+                        type="checkbox"
+                        checked={form.genre.includes(g)}
+                        onChange={() => handleToggleGenre(g)}
+                      />
+                      <span>#{g}</span>
+                    </label>
+                  ))}
+                </div>
+              )}
+            </ErrorBoundary>
+          </fieldset>
+
+          <div>
+            <label className="new-book-page-label" htmlFor="rating">
+              Rating (1-5) *
+              <select
+                id="rating"
+                value={form.rating}
+                onChange={handleRatingChange}
+                required
+                className="new-book-page-select"
+              >
+                {[1, 2, 3, 4, 5].map((n) => (
+                  <option key={n} value={n}>
+                    {n}
+                  </option>
+                ))}
+              </select>
+            </label>
+          </div>
+
+          <div className="new-book-page-footer">
+            <Button
+              variant="primary"
+              type="submit"
+              disabled={submitting}
+              className="new-book-page-submit"
             >
-              {[1, 2, 3, 4, 5].map((n) => (
-                <option key={n} value={n}>
-                  {n}
-                </option>
-              ))}
-            </select>
-          </label>
-        </div>
-
-        <div className="new-book-page-footer">
-          <Button
-            variant="primary"
-            type="submit"
-            disabled={submitting}
-            className="new-book-page-submit"
-          >
-            {submitting ? "Creating..." : "Create book"}
-          </Button>
-          <Button
-            variant="secondary"
-            type="button"
-            onClick={() => navigate("/books")}
-          >
-            Cancel
-          </Button>
-        </div>
-      </form>
+              {submitting ? "Creating..." : "Create book"}
+            </Button>
+            <Button
+              variant="secondary"
+              type="button"
+              onClick={() => navigate("/books")}
+            >
+              Cancel
+            </Button>
+          </div>
+        </form>
+      </ErrorBoundary>
     </Page>
   );
 }

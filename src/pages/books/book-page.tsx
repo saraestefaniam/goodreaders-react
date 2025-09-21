@@ -67,9 +67,6 @@ function BookPage() {
               {book.description && (
                 <p className="book-item-description">{book.description}</p>
               )}
-              <p className="book-item-status">
-                {book.wantToRead ? "Want to read" : "Already read"}
-              </p>
               <div className="book-item-rating" title={`${book.rating}/5`}>
                 {"★".repeat(book.rating) + "☆".repeat(5 - book.rating)}
               </div>
