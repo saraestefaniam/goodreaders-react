@@ -1,15 +1,68 @@
 import FormField from "../../components/ui/form-field";
 import Button from "../../components/ui/button";
+import { useAppDispatch, useAppSelector } from "../../store/hooks";
+import { useState } from "react";
+import { createUser } from "../../store/thunks/authThunks";
 
 const CreateUserPage = () => {
-  const handleChange = (event: React.FormEvent) => {
-    event.preventDefault();
-    return;
+  const dispatch = useAppDispatch();
+  const { loading, error } = useAppSelector((state) => state.auth);
+
+  const [form, setForm] = useState({
+    name: "",
+    email: "",
+    password: "",
+    passwordAgain: "",
+  });
+
+  const [avatarFile, setAvatarFile] = useState<File | null>(null);
+  const [passwordError, setPasswordError] = useState<string | null>(null);
+
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value, files } = event.target;
+    if (name === "avatar" && files) {
+      setAvatarFile(files[0]);
+    } else {
+      setForm((prev) => ({
+        ...prev,
+        [name]: value,
+      }));
+    }
   };
 
-  const handleSubmit = (event: React.FormEvent) => {
+  const passwordValidator = () => {
+    if (form.password !== form.passwordAgain) {
+      setPasswordError("Passwords don't match");
+      return false;
+    }
+    setPasswordError(null);
+    return true;
+  };
+
+  const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
-    return;
+    if (!passwordValidator()) return;
+
+    let avatarBase64 = undefined;
+
+    if (avatarFile) {
+      const reader = new FileReader()
+      const filePromise = new Promise<string>((resolve, reject) => {
+        reader.onloadend = () => {
+          resolve(reader.result as string)
+        }
+        reader.onerror = reject
+      })
+      reader.readAsDataURL(avatarFile)
+      avatarBase64 = await filePromise
+    }
+    const formData = {
+      name: form.name,
+      email: form.email,
+      password: form.password,
+      avatar: avatarBase64
+    }
+    dispatch(createUser(formData));
   };
 
   return (
@@ -19,8 +72,8 @@ const CreateUserPage = () => {
         <form onSubmit={handleSubmit}>
           <FormField
             label="User"
-            name="user"
-            value={""} //pendiente, debería ser algo tipo form.user o user
+            name="name"
+            value={form.name}
             onChange={handleChange}
             placeholder="Write your username"
             required
@@ -28,7 +81,7 @@ const CreateUserPage = () => {
           <FormField
             label="Email"
             name="email"
-            value={""} //pendiente, debería ser algo como form.email o email estas se definen arriba al inicio de la función y sus estados se manejan con redux
+            value={form.email}
             onChange={handleChange}
             placeholder="example@email.com"
             required
@@ -36,15 +89,15 @@ const CreateUserPage = () => {
           <FormField
             label="Password"
             name="password"
-            value={""} //pendiente, debería ser algo como form.password o password
+            value={form.password}
             onChange={handleChange}
             placeholder="Write your password"
             required
           />
           <FormField
             label="Repeat password"
-            name="password"
-            value={""}
+            name="passwordAgain"
+            value={form.passwordAgain}
             onChange={handleChange}
             placeholder="Write your password again"
             required
@@ -56,11 +109,12 @@ const CreateUserPage = () => {
             accept="image/"
             onChange={handleChange}
             placeholder="Upload your avatar"
-            required
           />
-          <Button type="submit" variant="primary">
-            Create user
+          <Button type="submit" variant="primary" disabled={loading}>
+            {loading ? "Creating user..." : "Create user"}
           </Button>
+          {error && <p>{error}</p>}
+          {passwordError && <p className="text-red-500">{passwordError}</p>}
         </form>
       </div>
     </div>
