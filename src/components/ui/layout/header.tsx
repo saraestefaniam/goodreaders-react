@@ -1,4 +1,3 @@
-import React from "react";
 import "./header.css";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import GoodReadersIcon from "../icons/GoodReaders.tsx";

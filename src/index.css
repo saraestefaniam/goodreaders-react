@@ -2,14 +2,71 @@
 @tailwind components;
 @tailwind utilities;
 
-/* src/styles/variables.css */
 :root {
-  --color-primary: #721422;
-  --color-primary-hover: #e0245e;
-  --color-bg: #fff0f5;
-  --color-text: #333;
-  --cards: #
-  --border-radius: 8px;
-  --spacing: 12px;
-  --font-family: "Inter", sans-serif;
+  --text-primary: 17, 24, 39;
+  --text-muted: 107, 114, 128;
+  --accent: 64, 157, 105;
+  --chrome-bg: 245, 246, 248;
+  --page-bg: 255, 255, 255;
+  --card-bg: 245, 246, 248;
+  --border: 229, 231, 235;
+  --radius: 8px;
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, .06);
+}
+
+* {
+  box-sizing: border-box;
+  border-width: 0;
+}
+
+html {
+  min-height: 100vh;
+}
+
+body {
+  margin: 0;
+  color: rgb(var(--text-primary));
+  background: rgb(var(--page-bg));
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu,
+    Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin: 0;
+  font-family: "Georgia", serif;
+}
+
+ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+input,
+textarea,
+select {
+  color: rgb(var(--text-primary));
+  background: #fff;
+  border: 1px solid rgb(var(--border));
+  border-radius: var(--radius);
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(var(--accent), .15);
+  border-color: rgba(var(--accent), .6);
 }

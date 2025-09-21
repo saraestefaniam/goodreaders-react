@@ -6,13 +6,15 @@ import { VALID_GENRES } from "./genres-type";
 import Page from "../../components/ui/layout/page";
 import Button from "../../components/ui/button";
 import BookItem from "./book-item";
-import { Link } from "react-router-dom";
-import "../../index.css"
+import { Link, useNavigate } from "react-router-dom";
+import "../../index.css";
 
-const EmptyList = () => (
+const EmptyList = ({ onAdd }: { onAdd: () => void }) => (
   <div>
     <p>No books yet. Be the first to add one!</p>
-    <Button variant="primary">Add Book</Button>
+    <Button variant="primary" type="button" onClick={onAdd}>
+      Add Book
+    </Button>
   </div>
 );
 
@@ -20,6 +22,7 @@ function BooksPage() {
   const [books, setBooks] = useState<Book[]>([]);
   const [availableGenres, setAvailableGenres] = useState<Genre[]>([]);
   const [filterGenres, setFilterGenres] = useState<Genre[]>([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     (async () => {
@@ -76,7 +79,7 @@ function BooksPage() {
           ))}
         </div>
       ) : (
-        <EmptyList />
+        <EmptyList onAdd={() => navigate("/books/new")} />
       )}
     </Page>
   );

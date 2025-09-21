@@ -1,12 +1,20 @@
+/* src/components/ui/layout/footer.css */
 .footer {
-    height: 64px;
-    padding: 0 15px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-style: solid;
-    border-color: rgb(var(--color-border));
-    border-top-width: 1px;
-    color: rgb(var(--color-primary-text));
-    background-color: rgb(255, 240, 245);
-  }
+  height: 64px;
+  padding: 0 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-top: 1px solid rgb(var(--color-border));
+  color: rgb(var(--color-primary-text));
+  background-color: rgb(var(--color-bg));
+}
+
+.footer a {
+  color: rgb(var(--color-primary-text));
+  text-decoration: none;
+}
+
+.footer a:hover {
+  text-decoration: underline;
+}
