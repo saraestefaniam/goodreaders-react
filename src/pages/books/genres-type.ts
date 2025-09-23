@@ -1,11 +1,1 @@
-export const VALID_GENRES = [
-  "fantasy",
-  "science-fiction",
-  "romance",
-  "thriller",
-  "non-fiction",
-  "historical",
-  "mystery",
-] as const;
-
-export type Genre = (typeof VALID_GENRES)[number];
+export type Genres = "fantasy" | "science-fiction" | "romance" | "thriller" | "non-fiction" | "mystery" | "other";

@@ -1,9 +1,8 @@
 import api from "../../api/client";
 import type { Book } from "./type";
-import { VALID_GENRES } from "./genres-type";
-import type { Genre } from "./genres-type";
+import type { Genres } from "./genres-type";
 
-const BOOKS_URL = "/api/v1/books"; 
+const BOOKS_URL = "/books"; 
 
 // GET lista 
 export const getBooks = async () => {
@@ -27,7 +26,7 @@ export const createBook = async (payload: {
   genre: string[];
   rating: number;        
 }) => {
-  const res = await api.post<Book>(BOOKS_URL, payload); // JSON, no FormData
+  const res = await api.post<Book>(BOOKS_URL, payload); 
   return res.data;
 };
 
@@ -38,6 +37,7 @@ export const deleteBook = async (bookId: string) => {
 };
 
 // GET Genres
-export const getGenres = async (): Promise<Genre[]> => {
-  return [...VALID_GENRES];
+export const getGenres = async (): Promise<Genres[]> => {
+  const { data } = await api.get<Genres[]>(`${BOOKS_URL}/genres`);
+  return data;
 };
