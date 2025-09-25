@@ -42,7 +42,7 @@ export const createUser = createAsyncThunk(
           error.response.data.message || "Error creating user",
         );
       }
-      return rejectWithValue("Something went wrong");
+      return rejectWithValue("Something went wrong, try again later");
     }
   },
 );
