@@ -2,7 +2,7 @@ import api from "../../api/client";
 import type { Book } from "./type";
 import type { Genres } from "./genres-type";
 
-const BOOKS_URL = "/books"; 
+const BOOKS_URL = "api/v1/books"; 
 
 // GET lista 
 export const getBooks = async () => {
