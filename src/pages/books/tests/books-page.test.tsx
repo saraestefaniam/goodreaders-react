@@ -46,9 +46,9 @@ describe("BooksPage", () => {
     },
     {
       id: "2",
-      title: "Pride and Prejudice",
-      author: "Jane Austen",
-      description: "Classic romance",
+      title: "Warbreaker",
+      author: "Brandon Sanderson",
+      description: "Colorful magic",
       review: "Lovely read",
       cover: "",
       genre: ["romance"],
@@ -73,10 +73,10 @@ describe("BooksPage", () => {
     );
 
     expect(await screen.findByText("The Way of Kings")).toBeInTheDocument();
-    expect(screen.getByText("Pride and Prejudice")).toBeInTheDocument();
+    expect(screen.getByText("Warbreaker")).toBeInTheDocument();
 
     const link1 = screen.getByRole("link", { name: /the way of kings/i });
-    const link2 = screen.getByRole("link", { name: /warbreaker./i });
+    const link2 = screen.getByRole("link", { name: /warbreaker/i });
     expect(link1).toHaveAttribute("href", "/books/1");
     expect(link2).toHaveAttribute("href", "/books/2");
   });
@@ -92,18 +92,18 @@ describe("BooksPage", () => {
     );
 
     await screen.findByText("The Way of Kings");
-    screen.getByText("Pride and Prejudice");
+    screen.getByText("Warbreaker");
 
     const fantasyCheckbox = screen.getByLabelText("fantasy");
     await user.click(fantasyCheckbox);
 
     expect(screen.getByText("The Way of Kings")).toBeInTheDocument();
-    expect(screen.queryByText("Pride and Prejudice")).not.toBeInTheDocument();
+    expect(screen.queryByText("Warbreaker")).not.toBeInTheDocument();
 
     await user.click(fantasyCheckbox);
 
     expect(screen.getByText("The Way of Kings")).toBeInTheDocument();
-    expect(screen.getByText("Pride and Prejudice")).toBeInTheDocument();
+    expect(screen.getByText("Warbreaker")).toBeInTheDocument();
   });
 
   it("shows empty state and navigates to /books/new on button click", async () => {
