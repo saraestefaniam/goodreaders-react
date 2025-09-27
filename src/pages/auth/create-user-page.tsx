@@ -5,6 +5,7 @@ import { useState } from "react";
 import { createUser } from "../../store/thunks/authThunks";
 import Page from "../../components/ui/layout/page";
 import "./auth.css";
+import { useNavigate } from "react-router-dom";
 
 const CreateUserPage = () => {
   const dispatch = useAppDispatch();
@@ -17,8 +18,13 @@ const CreateUserPage = () => {
     passwordAgain: "",
   });
 
+  const navigate = useNavigate();
+
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
   const [passwordError, setPasswordError] = useState<string | null>(null);
+  const [successfulMessage, setSuccessfulMessage] = useState<string | null>(
+    null,
+  );
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, files } = event.target;
@@ -64,7 +70,21 @@ const CreateUserPage = () => {
       password: form.password,
       avatar: avatarBase64,
     };
-    dispatch(createUser(formData));
+
+    try {
+      const resultAction = await dispatch(createUser(formData));
+
+      if (createUser.fulfilled.match(resultAction)) {
+        setSuccessfulMessage(
+          "User created successfully, redirecting to login...",
+        );
+        setTimeout(() => {
+          navigate("/login");
+        }, 3000);
+      }
+    } catch (err: any) {
+      err.message || "Unexpected error ocurred";
+    }
   };
 
   return (
@@ -75,6 +95,7 @@ const CreateUserPage = () => {
 
           {error && <div className="auth-alert">{error}</div>}
           {passwordError && <div className="auth-alert">{passwordError}</div>}
+          {successfulMessage && <div className="auth-alert success">{successfulMessage}</div>}
 
           <form className="auth-form" onSubmit={handleSubmit}>
             <div>

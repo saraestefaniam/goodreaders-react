@@ -75,3 +75,9 @@
   border: 1px solid var(--nbp-danger-border, #ffb3b3);
   color: var(--nbp-danger-text, #8a0000);
 }
+
+.auth-alert.success {
+  background: var(--nbp-success-bg, #e8f7e8);
+  border: 1 px solid var(--nbp-success-border, #a3d9a5);
+  color: var(--nbp-success-text, #1d6e1d);
+}
