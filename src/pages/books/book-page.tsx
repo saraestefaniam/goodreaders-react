@@ -6,9 +6,10 @@ import { getBook, deleteBook } from "./service";
 import { AxiosError } from "axios";
 import ConfirmDialog from "../../components/ui/layout/confirm-dialog";
 import Button from "../../components/ui/button";
+import "./book-item.css";
 
 function BookPage() {
-  const { bookId } = useParams<{ bookId: string }>();
+  const params = useParams();
   const [book, setBook] = useState<Book | null>(null);
   const navigate = useNavigate();
   const [showConfirm, setShowConfirm] = useState(false);
@@ -21,9 +22,13 @@ function BookPage() {
     } catch (error) {
       if (error instanceof AxiosError) {
         const status = error.response?.status;
-        if (status === 404) navigate("/404");
-        else if (status === 401) navigate("/login");
-        else console.error("Unexpected error while deleting:", error);
+        if (status === 404) {
+          navigate("/404");
+        } else if (status === 401) {
+          navigate("/login");
+        } else {
+          console.error("Unexpected error while deleting:", error);
+        }
       } else {
         console.error("Unknown error:", error);
       }
@@ -31,15 +36,19 @@ function BookPage() {
   };
 
   useEffect(() => {
-    if (!bookId) return;
-    getBook(bookId)
+    if (!params.bookId) return;
+
+    getBook(params.bookId)
       .then((b) => setBook(b))
       .catch((error) => {
-        if (error instanceof AxiosError && error.response?.status === 404) {
-          navigate("/404");
+        if (error instanceof AxiosError) {
+          const status = error.response?.status;
+          if (status === 404) {
+            navigate("/404");
+          }
         }
       });
-  }, [bookId, navigate]);
+  }, [params.bookId, navigate]);
 
   return (
     <Page title="Book detail">
@@ -47,7 +56,7 @@ function BookPage() {
         <>
           <article
             className="book-item"
-            style={{ maxWidth: 400, margin: "0 auto" }}
+            style={{ maxWidth: "400px", margin: "0 auto" }}
           >
             <img
               src={book.cover || "/descarga.png"}
@@ -57,6 +66,7 @@ function BookPage() {
             <div className="book-item-details">
               <h2 className="book-item-title">{book.title}</h2>
               <p className="book-item-author">{book.author}</p>
+
               <div className="book-item-tags">
                 {book.genre.map((g) => (
                   <span key={g} className="book-item-tag">
@@ -64,13 +74,16 @@ function BookPage() {
                   </span>
                 ))}
               </div>
+
               {book.description && (
                 <p className="book-item-description">{book.description}</p>
               )}
+
               <div className="book-item-rating" title={`${book.rating}/5`}>
                 {"★".repeat(book.rating) + "☆".repeat(5 - book.rating)}
               </div>
             </div>
+
             <div
               style={{
                 display: "flex",

@@ -67,3 +67,40 @@ export default tseslint.config([
   },
 ]);
 ```
+
+---
+
+## Frontend tests (Vitest + React Testing Library)
+
+**Stack:** Vitest, `jsdom`, `@testing-library/react`, `@testing-library/jest-dom`, `@testing-library/user-event`.
+
+### 1) Install dev dependencies
+
+```bash
+npm i -D vitest jsdom \
+  @testing-library/react @testing-library/jest-dom @testing-library/user-event \
+  @types/node
+```
+
+### 2) Add scripts to package.json
+
+```bash
+    "test": "vitest",
+    "test:watch": "vitest --watch",
+    "test:ui": "vitest --ui"
+```
+
+### 3) Add Vitest config (vitest.config.ts)
+
+### 4) Test setup (src/setupTests.ts)
+
+### 5) Run tests
+
+```bash
+# watch mode
+npm run test
+# single run (CI)
+npm run test:run
+# a specific file
+npx vitest run src/pages/books/tests/book-item.test.tsx
+```
