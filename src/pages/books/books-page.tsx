@@ -1,8 +1,7 @@
 import { useState, useEffect } from "react";
 import { getBooks, getGenres } from "./service";
 import type { Book } from "./type";
-import type { Genre } from "./genres-type";
-import { VALID_GENRES } from "./genres-type";
+import type { Genres } from "./genres-type";
 import Page from "../../components/ui/layout/page";
 import Button from "../../components/ui/button";
 import BookItem from "./book-item";
@@ -20,29 +19,53 @@ const EmptyList = ({ onAdd }: { onAdd: () => void }) => (
 
 function BooksPage() {
   const [books, setBooks] = useState<Book[]>([]);
-  const [availableGenres, setAvailableGenres] = useState<Genre[]>([]);
-  const [filterGenres, setFilterGenres] = useState<Genre[]>([]);
+  const [availableGenres, setAvailableGenres] = useState<Genres[]>([]);
+  const [filterGenres, setFilterGenres] = useState<Genres[]>([]);
   const navigate = useNavigate();
 
   useEffect(() => {
+    let mounted = true;
+
     (async () => {
-      try {
-        const booksFromApi = await getBooks();
-        const genresFromApi = await getGenres();
-        const validGenres = genresFromApi.filter((g): g is Genre =>
-          VALID_GENRES.includes(g as Genre),
-        );
-        setBooks(booksFromApi);
-        setAvailableGenres(validGenres);
-      } catch (e) {
-        console.error(e);
+      const [booksRes, genresRes] = await Promise.allSettled([
+        getBooks(),
+        getGenres(),
+      ]);
+
+      if (!mounted) return;
+
+      if (booksRes.status === "fulfilled") {
+        setBooks(booksRes.value);
+      } else {
+        console.error("Failed to load books:", booksRes.reason);
+        setBooks([]);
+      }
+
+      if (genresRes.status === "fulfilled") {
+        setAvailableGenres(genresRes.value);
+      } else {
+        console.error("Failed to load genres:", genresRes.reason);
+        // Fallback coherente con tu tipo `Genres`
+        setAvailableGenres([
+          "fantasy",
+          "science-fiction",
+          "romance",
+          "thriller",
+          "non-fiction",
+          "mystery",
+          "other",
+        ]);
       }
     })();
+
+    return () => {
+      mounted = false;
+    };
   }, []);
 
   const filteredBooks = books.filter((book) =>
     filterGenres.length
-      ? filterGenres.every((g) => book.genre.includes(g))
+      ? filterGenres.some((g) => book.genre.includes(g))
       : true,
   );
 

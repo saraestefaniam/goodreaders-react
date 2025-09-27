@@ -12,7 +12,7 @@ const BookItem = ({ book }: BookItemProps) => {
   return (
     <article className="book-item">
       <img
-        src={cover || "/descarga.png"}
+        src={cover ? cover : "https://picsum.photos/id/24/400/400"}
         alt={title}
         className="book-item-image"
         loading="lazy"
