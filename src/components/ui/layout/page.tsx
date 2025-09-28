@@ -6,11 +6,14 @@ interface PageProps {
   description?: ReactNode;
   actions?: ReactNode;
   children: ReactNode;
+  variant?: "default" | "flush";
 }
 
-function Page({ title, description, actions, children }: PageProps) {
+function Page({ title, description, actions, children, variant = "default" }: PageProps) {
+  const sectionClass = `layout-page${variant === "flush" ? " layout-page--flush" : ""}`;
+
   return (
-    <section className="layout-page">
+    <section className={sectionClass}>
       {(title || description || actions) && (
         <header className="layout-page__header">
           <div className="layout-page__heading">
