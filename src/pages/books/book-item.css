@@ -1,76 +1,85 @@
 .book-item {
   display: flex;
   flex-direction: column;
-  background: rgb(var(--card-bg));
-  border: 1px solid rgb(var(--border));
-  border-radius: 6px;
+  background: rgba(var(--surface-elevated), 0.98);
+  border: 1px solid rgba(var(--color-border-strong), 0.6);
+  border-radius: var(--radius-md);
   box-shadow: var(--shadow-sm);
   overflow: hidden;
-  transition: transform .12s ease, box-shadow .12s ease;
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
 }
 
 .book-item:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, .08);
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-md);
 }
 
 .book-item-image {
   width: 100%;
-  height: 220px;
+  aspect-ratio: 3 / 4;
   object-fit: cover;
-  background: #fff;
+  background: rgba(var(--color-neutral-200), 0.4);
 }
 
 .book-item-details {
-  padding: 12px;
-  background: rgb(var(--card-bg));
+  padding: var(--space-md);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
 }
 
 .book-item-title {
-  font-family: "Georgia", serif;
-  font-size: 16px;
-  line-height: 1.25;
-  color: rgb(var(--text-primary));
-  margin: 0 0 4px;
+  font-family: var(--font-family-serif);
+  font-size: clamp(1.25rem, 1.1rem + 0.5vw, 1.6rem);
+  line-height: var(--line-height-tight);
+  color: rgb(var(--color-text-strong));
+  margin: 0;
 }
 
 .book-item-author {
-  font-size: 13px;
-  color: rgb(var(--text-muted));
-  margin: 0 0 8px;
+  font-size: var(--font-size-sm);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: rgb(var(--color-text-muted));
+  margin: 0;
 }
 
 .book-item-rating {
-  font-size: 14px;
-  letter-spacing: 1px;
-  color: #b3b3b3;
-  margin-bottom: 8px;
+  font-size: var(--font-size-md);
+  letter-spacing: 0.2em;
+  color: rgba(var(--color-brand-500), 0.85);
 }
 
 .book-item-genres,
 .book-item-tags {
   display: flex;
   flex-wrap: wrap;
-  gap: 6px;
-  margin-bottom: 10px;
+  gap: var(--space-2xs);
 }
 
 .book-item-genre,
 .book-item-tag {
-  font-size: 12px;
-  color: #555;
-  border: 1px solid rgb(var(--border));
-  background: #fff;
-  padding: 2px 6px;
-  border-radius: 999px;
+  font-size: var(--font-size-sm);
+  color: rgb(var(--color-brand-600));
+  border: 1px solid rgba(var(--color-brand-500), 0.35);
+  background: rgba(var(--color-brand-50), 0.6);
+  padding: 4px 10px;
+  border-radius: var(--radius-lg);
+}
+
+.book-item-description {
+  margin: 0;
+  font-size: var(--font-size-md);
+  line-height: var(--line-height-base);
+  color: rgb(var(--color-text-muted));
 }
 
 .book-item-status {
   display: inline-block;
-  font-size: 12px;
+  font-size: var(--font-size-sm);
   font-weight: 600;
-  color: #fff;
-  background: rgb(var(--accent));
-  border-radius: 4px;
-  padding: 6px 10px;
+  color: rgb(var(--color-text-inverse));
+  background: rgb(var(--color-brand-500));
+  border-radius: var(--radius-sm);
+  padding: var(--space-2xs) var(--space-sm);
 }

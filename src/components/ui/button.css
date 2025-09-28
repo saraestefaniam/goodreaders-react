@@ -1,50 +1,78 @@
 .btn {
   cursor: pointer;
-  border: 1px solid transparent;
-  border-radius: 9999px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  gap: var(--space-2xs);
+  border-radius: var(--radius-lg);
+  border: 1px solid transparent;
+  padding: calc(var(--space-xs) - 2px) var(--space-md);
+  min-height: 42px;
+  font-family: var(--font-family-sans);
   font-weight: 600;
-  min-height: 36px;
-  min-width: 96px;
-  padding: 0 24px;
-  outline: none;
+  font-size: var(--font-size-md);
+  line-height: 1;
   text-decoration: none;
-  transition: filter .15s ease, background-color .15s ease, border-color .15s ease;
+  transition: background-color 0.2s ease, border-color 0.2s ease,
+    box-shadow 0.2s ease, transform 0.2s ease;
+  box-shadow: var(--shadow-xs);
+}
+
+.btn:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(var(--color-brand-400), 0.35),
+    var(--shadow-sm);
+}
+
+.btn:hover {
+  transform: translateY(-1px);
+}
+
+.btn:active {
+  transform: translateY(0);
 }
 
 .btn--primary {
-  background: rgb(var(--accent));
-  color: #fff;
-  border-color: rgb(var(--accent));
+  background: rgb(var(--color-brand-500));
+  border-color: rgb(var(--color-brand-500));
+  color: rgb(var(--color-text-inverse));
 }
 
 .btn--primary:hover {
-  filter: brightness(.95);
+  background: rgb(var(--color-brand-600));
+  border-color: rgb(var(--color-brand-600));
 }
 
-.btn--primary:focus-visible {
-  outline: 2px solid rgba(var(--accent), .35);
-  outline-offset: 2px;
+.btn--primary:active {
+  background: rgb(var(--color-brand-700));
+  border-color: rgb(var(--color-brand-700));
 }
 
 .btn--secondary {
-  background: #fff;
-  color: rgb(var(--accent));
-  border-color: rgb(var(--accent));
+  background: rgba(var(--color-brand-500), 0.08);
+  color: rgb(var(--color-brand-600));
+  border-color: rgba(var(--color-brand-500), 0.45);
+  box-shadow: none;
 }
 
 .btn--secondary:hover {
-  background: rgba(var(--accent), .08);
+  background: rgba(var(--color-brand-500), 0.16);
+  color: rgb(var(--color-brand-700));
+  border-color: rgba(var(--color-brand-600), 0.5);
 }
 
-.btn--secondary:focus-visible {
-  outline: 2px solid rgba(var(--accent), .25);
-  outline-offset: 2px;
+.btn--secondary:active {
+  background: rgba(var(--color-brand-500), 0.24);
 }
 
-.btn--disabled {
-  opacity: .5;
+.btn.btn--secondary:focus-visible {
+  box-shadow: 0 0 0 3px rgba(var(--color-brand-400), 0.3);
+}
+
+.btn--disabled,
+.btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
   pointer-events: none;
+  box-shadow: none;
 }
