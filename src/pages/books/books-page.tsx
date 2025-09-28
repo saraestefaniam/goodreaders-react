@@ -7,6 +7,7 @@ import Button from "../../components/ui/button";
 import BookItem from "./book-item";
 import { Link, useNavigate } from "react-router-dom";
 import "../../index.css";
+import "./books-pages.css";
 
 const EmptyList = ({ onAdd }: { onAdd: () => void }) => (
   <div>
