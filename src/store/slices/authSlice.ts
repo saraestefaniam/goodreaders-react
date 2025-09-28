@@ -1,6 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { User } from "../../pages/auth/userType";
 import { loginUser, createUser } from "../thunks/authThunks";
+import storage from "../../utils/storage";
+import {
+  removeAuthorizationHeader,
+  setAuthorizationHeader,
+} from "../../api/client";
 
 interface AuthState {
   user: User | null;
@@ -11,7 +16,7 @@ interface AuthState {
 
 const initialState: AuthState = {
   user: null,
-  token: localStorage.getItem("accessToken"),
+  token: storage.get("auth"),
   loading: false,
   error: null,
 };
@@ -23,8 +28,8 @@ const authSlice = createSlice({
     logout: (state) => {
       state.user = null;
       state.token = null;
-      localStorage.removeItem("accessToken");
-      sessionStorage.removeItem("accessToken");
+      storage.remove("auth");
+      removeAuthorizationHeader();
     },
   },
   extraReducers: (builder) => {
@@ -35,7 +40,7 @@ const authSlice = createSlice({
     builder.addCase(loginUser.fulfilled, (state, action) => {
       state.loading = false;
       state.token = action.payload.token;
-      localStorage.setItem("accessToken", action.payload.token)
+      setAuthorizationHeader(action.payload.token);
     });
     builder.addCase(loginUser.rejected, (state, action) => {
       state.loading = false;

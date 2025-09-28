@@ -5,7 +5,8 @@ import { useState } from "react";
 import "./auth.css";
 import { loginUser } from "../../store/thunks/authThunks";
 import storage from "../../utils/storage";
-import {  useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { setAuthorizationHeader } from "../../api/client";
 
 const LoginPage = () => {
   const dispatch = useAppDispatch();
@@ -36,8 +37,9 @@ const LoginPage = () => {
     const response = await dispatch(loginUser(form));
     if (loginUser.fulfilled.match(response)) {
       const token = response.payload.token;
+      setAuthorizationHeader(token);
       storage.set("auth", token, rememberUser);
-      navigate("/", {replace: true})
+      navigate("/", { replace: true });
     }
   };
 
