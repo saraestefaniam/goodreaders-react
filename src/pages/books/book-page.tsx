@@ -1,23 +1,29 @@
+import { useEffect, useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import Page from "../../components/ui/layout/page";
-import { useEffect, useState } from "react";
-import type { Book } from "./type";
-import { getBook, deleteBook } from "./service";
 import { AxiosError } from "axios";
+import Page from "../../components/ui/layout/page";
 import ConfirmDialog from "../../components/ui/layout/confirm-dialog";
 import Button from "../../components/ui/button";
+import { getBook, deleteBook } from "./service";
+import type { Book } from "./type";
 import "./book-item.css";
+import "./book-page.css";
 
 function BookPage() {
-  const params = useParams();
-  const [book, setBook] = useState<Book | null>(null);
+  const { bookId } = useParams();
   const navigate = useNavigate();
+  const [book, setBook] = useState<Book | null>(null);
+  const [status, setStatus] = useState<"loading" | "success" | "error">(
+    "loading",
+  );
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [showConfirm, setShowConfirm] = useState(false);
 
   const handleDelete = async () => {
     if (!book) return;
     try {
       await deleteBook(book.id.toString());
+      setShowConfirm(false);
       navigate("/books");
     } catch (error) {
       if (error instanceof AxiosError) {
@@ -36,75 +42,147 @@ function BookPage() {
   };
 
   useEffect(() => {
-    if (!params.bookId) return;
+    if (!bookId) {
+      setStatus("error");
+      setErrorMessage("Missing book identifier.");
+      return;
+    }
 
-    getBook(params.bookId)
-      .then((b) => setBook(b))
+    setStatus("loading");
+    setErrorMessage(null);
+
+    getBook(bookId)
+      .then((fetchedBook) => {
+        setBook(fetchedBook);
+        setStatus("success");
+      })
       .catch((error) => {
         if (error instanceof AxiosError) {
-          const status = error.response?.status;
-          if (status === 404) {
+          const statusCode = error.response?.status;
+          if (statusCode === 404) {
             navigate("/404");
+            return;
           }
+          if (statusCode === 401) {
+            navigate("/login");
+            return;
+          }
+          setErrorMessage(
+            error.response?.data?.message ?? "Unable to load this book.",
+          );
+        } else {
+          setErrorMessage("Unable to load this book.");
         }
+        setStatus("error");
       });
-  }, [params.bookId, navigate]);
+  }, [bookId, navigate]);
+
+  const ratingLabel = useMemo(() => {
+    if (!book) return "";
+    return `${book.rating} / 5`;
+  }, [book]);
+
+  const createdAt = useMemo(() => {
+    if (!book) return null;
+    return new Date(book.createdAt).toLocaleDateString();
+  }, [book]);
+
+  const updatedAt = useMemo(() => {
+    if (!book) return null;
+    return new Date(book.updatedAt).toLocaleDateString();
+  }, [book]);
 
   return (
-    <Page title="Book detail">
-      {book && (
-        <>
-          <article
-            className="book-item"
-            style={{ maxWidth: "400px", margin: "0 auto" }}
-          >
-            <img
-              src={book.cover || "/descarga.png"}
-              alt={book.title}
-              className="book-item-image"
-            />
-            <div className="book-item-details">
-              <h2 className="book-item-title">{book.title}</h2>
-              <p className="book-item-author">{book.author}</p>
+    <Page title={book ? book.title : "Book detail"}>
+      <div className="book-detail">
+        {status === "loading" && (
+          <div className="book-detail__state">Loading book…</div>
+        )}
 
-              <div className="book-item-tags">
+        {status === "error" && (
+          <div className="book-detail__state book-detail__state--error">
+            {errorMessage ?? "We couldn't load this book."}
+          </div>
+        )}
+
+        {status === "success" && book && (
+          <article className="book-item book-item--detail">
+            <div
+              className="book-item-media"
+              role="img"
+              aria-label={`Cover art for ${book.title}`}
+              style={{
+                backgroundImage: `url(${book.cover || "/descarga.png"})`,
+              }}
+            />
+
+            <div className="book-item-details">
+              <header className="book-item-details__header">
+                <h2 className="book-item-title">{book.title}</h2>
+                <p className="book-item-author">by {book.author}</p>
+                <div
+                  className="book-item-rating"
+                  aria-label={`Rating: ${ratingLabel}`}
+                  title={ratingLabel}
+                >
+                  {"★".repeat(book.rating) + "☆".repeat(5 - book.rating)}
+                </div>
+              </header>
+
+              {book.description && (
+                <p className="book-item-summary book-item-summary--detail">
+                  {book.description}
+                </p>
+              )}
+
+              <section className="book-item-review">
+                <h3>Review</h3>
+                <p>{book.review}</p>
+              </section>
+
+              <div className="book-item-genres">
                 {book.genre.map((g) => (
-                  <span key={g} className="book-item-tag">
-                    {g}
+                  <span key={g} className="book-item-genre">
+                    #{g}
                   </span>
                 ))}
               </div>
 
-              {book.description && (
-                <p className="book-item-description">{book.description}</p>
-              )}
+              <div className="book-item-meta">
+                {createdAt && <span>Added on {createdAt}</span>}
+                {updatedAt && updatedAt !== createdAt && (
+                  <span>Updated on {updatedAt}</span>
+                )}
+              </div>
 
-              <div className="book-item-rating" title={`${book.rating}/5`}>
-                {"★".repeat(book.rating) + "☆".repeat(5 - book.rating)}
+              <div className="book-item-actions">
+                <Button
+                  type="button"
+                  variant="secondary"
+                  onClick={() => navigate("/books")}
+                >
+                  Back
+                </Button>
+
+                <Button
+                  type="button"
+                  variant="primary"
+                  onClick={() => setShowConfirm(true)}
+                >
+                  Delete
+                </Button>
               </div>
             </div>
-
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "flex-start",
-                padding: "1rem",
-              }}
-            >
-              <Button variant="primary" onClick={() => setShowConfirm(true)}>
-                Delete
-              </Button>
-            </div>
           </article>
+        )}
+      </div>
 
-          {showConfirm && (
-            <ConfirmDialog
-              message="Are you sure you want to delete this book?"
-              onConfirm={handleDelete}
-              onCancel={() => setShowConfirm(false)}
-            />
-          )}
-        </>
+      {showConfirm && book && (
+        <ConfirmDialog
+          message="Are you sure you want to delete this book?"
+          onConfirm={handleDelete}
+          onCancel={() => setShowConfirm(false)}
+        />
       )}
     </Page>
   );

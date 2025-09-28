@@ -1,0 +1,104 @@
+.book-detail {
+  display: flex;
+  justify-content: center;
+  padding: clamp(16px, 4vw, 40px) 0;
+}
+
+.book-detail__state {
+  width: min(680px, 100%);
+  padding: clamp(18px, 4vw, 28px);
+  border-radius: 16px;
+  border: 1px solid rgba(var(--border), 0.75);
+  background: rgba(var(--card-bg), 0.9);
+  box-shadow: 0 12px 28px rgba(15, 23, 42, 0.12);
+  font-size: 0.95rem;
+  color: rgb(var(--text-primary));
+  text-align: center;
+}
+
+.book-detail__state--error {
+  border-color: rgba(220, 38, 38, 0.5);
+  color: rgb(174, 40, 40);
+}
+
+.book-item--detail {
+  width: min(720px, 100%);
+  height: auto;
+  min-height: auto;
+  max-height: none;
+  margin: 0 auto;
+  box-shadow: 0 24px 48px rgba(15, 23, 42, 0.18);
+}
+
+.book-item--detail .book-item-details {
+  padding: clamp(24px, 4vw, 36px);
+  gap: clamp(14px, 3vw, 24px);
+}
+
+.book-item-details__header {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.book-item-summary--detail {
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+.book-item-review {
+  margin: 0;
+  padding: 18px;
+  border-radius: 14px;
+  background: rgba(var(--card-bg), 0.82);
+  border: 1px solid rgba(var(--border), 0.5);
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.08);
+}
+
+.book-item-review h3 {
+  margin: 0 0 8px;
+  font-family: "Georgia", serif;
+  font-size: 1.1rem;
+}
+
+.book-item-review p {
+  margin: 0;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: rgb(var(--text-muted));
+}
+
+.book-item-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 16px;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: rgba(var(--text-muted), 0.85);
+}
+
+.book-item-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: auto;
+}
+
+.book-item-actions .btn {
+  flex: 1;
+  min-width: 0;
+}
+
+@media (max-width: 600px) {
+  .book-detail {
+    padding: 12px 0 28px;
+  }
+
+  .book-item-review {
+    padding: 16px;
+  }
+
+  .book-item-actions {
+    flex-direction: column;
+  }
+}
