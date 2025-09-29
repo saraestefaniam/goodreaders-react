@@ -89,6 +89,48 @@
   min-width: 0;
 }
 
+.book-item-actions__toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px;
+  border-radius: 12px;
+  border: 1px solid rgba(var(--border), 0.6);
+  background: rgba(var(--card-bg), 0.85);
+  color: rgb(var(--text-primary));
+  font-weight: 600;
+  cursor: pointer;
+  user-select: none;
+  flex: 1;
+  justify-content: center;
+}
+
+.book-item-actions__toggle input {
+  width: 18px;
+  height: 18px;
+  accent-color: rgb(var(--primary));
+}
+
+.book-item-actions__toggle span {
+  white-space: nowrap;
+}
+
+.book-item-actions__toggle--disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+.book-item-actions__toggle--disabled input {
+  cursor: not-allowed;
+}
+
+.book-item-actions__error {
+  margin-top: 8px;
+  color: rgb(174, 40, 40);
+  font-size: 0.85rem;
+  text-align: center;
+}
+
 @media (max-width: 600px) {
   .book-detail {
     padding: 12px 0 28px;

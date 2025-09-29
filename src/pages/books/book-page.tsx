@@ -1,10 +1,10 @@
-import { useEffect, useMemo, useState } from "react";
+import { ChangeEvent, useEffect, useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { AxiosError } from "axios";
 import Page from "../../components/ui/layout/page";
 import ConfirmDialog from "../../components/ui/layout/confirm-dialog";
 import Button from "../../components/ui/button";
-import { getBook, deleteBook } from "./service";
+import { getBook, deleteBook, updateWantToReadStatus } from "./service";
 import type { Book } from "./type";
 import "./book-item.css";
 import "./book-page.css";
@@ -18,6 +18,9 @@ function BookPage() {
   );
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [showConfirm, setShowConfirm] = useState(false);
+  const [isWantToRead, setIsWantToRead] = useState(false);
+  const [isUpdatingWantToRead, setIsUpdatingWantToRead] = useState(false);
+  const [wantToReadError, setWantToReadError] = useState<string | null>(null);
 
   const handleDelete = async () => {
     if (!book) return;
@@ -41,6 +44,42 @@ function BookPage() {
     }
   };
 
+  const handleWantToReadChange = async (
+    event: ChangeEvent<HTMLInputElement>,
+  ) => {
+    if (!bookId) return;
+
+    const nextStatus = event.target.checked;
+    setWantToReadError(null);
+    setIsUpdatingWantToRead(true);
+
+    try {
+      await updateWantToReadStatus(bookId, nextStatus);
+      setIsWantToRead(nextStatus);
+      setBook((prev) => (prev ? { ...prev, wantToRead: nextStatus } : prev));
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        const statusCode = error.response?.status;
+        if (statusCode === 401) {
+          navigate("/login");
+          return;
+        }
+        if (statusCode === 404) {
+          navigate("/404");
+          return;
+        }
+        setWantToReadError(
+          error.response?.data?.message ??
+            "Unable to update want-to-read status.",
+        );
+      } else {
+        setWantToReadError("Unable to update want-to-read status.");
+      }
+    } finally {
+      setIsUpdatingWantToRead(false);
+    }
+  };
+
   useEffect(() => {
     if (!bookId) {
       setStatus("error");
@@ -54,6 +93,7 @@ function BookPage() {
     getBook(bookId)
       .then((fetchedBook) => {
         setBook(fetchedBook);
+        setIsWantToRead(Boolean(fetchedBook.wantToRead));
         setStatus("success");
       })
       .catch((error) => {
@@ -156,6 +196,24 @@ function BookPage() {
               </div>
 
               <div className="book-item-actions">
+                <label
+                  className={`book-item-actions__toggle${
+                    isUpdatingWantToRead ? " book-item-actions__toggle--disabled" : ""
+                  }`}
+                >
+                  <input
+                    type="checkbox"
+                    checked={isWantToRead}
+                    onChange={handleWantToReadChange}
+                    disabled={isUpdatingWantToRead}
+                  />
+                  <span>
+                    {isUpdatingWantToRead
+                      ? "Updating want to read…"
+                      : "Want to read"}
+                  </span>
+                </label>
+
                 <Button
                   type="button"
                   variant="secondary"
@@ -172,6 +230,12 @@ function BookPage() {
                   Delete
                 </Button>
               </div>
+
+              {wantToReadError && (
+                <p className="book-item-actions__error" role="alert">
+                  {wantToReadError}
+                </p>
+              )}
             </div>
           </article>
         )}
