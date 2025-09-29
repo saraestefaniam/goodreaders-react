@@ -3,6 +3,7 @@ import type { Book } from "./type";
 import type { Genres } from "./genres-type";
 
 const BOOKS_URL = "api/v1/books"; 
+const WANT_TO_READ_URL = "api/v1/users/want-to-read";
 
 // GET lista 
 export const getBooks = async () => {
@@ -34,6 +35,13 @@ export const createBook = async (payload: {
 export const deleteBook = async (bookId: string) => {
   const url = `${BOOKS_URL}/${bookId}`;
   await api.delete(url);
+};
+
+export const updateWantToReadStatus = async (
+  bookId: string,
+  wantToRead: boolean,
+) => {
+  await api.patch(`${WANT_TO_READ_URL}/${bookId}`, { wantToRead });
 };
 
 // GET Genres
