@@ -36,6 +36,13 @@ export const deleteBook = async (bookId: string) => {
   await api.delete(url);
 };
 
+// SEARCH
+export async function searchBooks(query:string) {
+  const res = await fetch(`/api/books/search?q=${encodeURIComponent(query)}`)
+  if (!res.ok) throw new Error("Error buscando libros")
+    return res.json()
+}
+
 // GET Genres
 export const getGenres = async (): Promise<Genres[]> => {
   const { data } = await api.get<Genres[]>(`${BOOKS_URL}/genres`);
