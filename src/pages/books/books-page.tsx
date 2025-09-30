@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { getBooks, getGenres } from "./service";
-import type { Book } from "./type";
+import type { Book, PaginatedBooks } from "./type";
 import type { Genres } from "./genres-type";
 import Page from "../../components/ui/layout/page";
 import Button from "../../components/ui/button";
@@ -8,6 +8,8 @@ import BookItem from "./book-item";
 import { Link, useNavigate } from "react-router-dom";
 import "../../index.css";
 import "./books-pages.css";
+
+const LIMIT = 4;
 
 const EmptyList = ({ onAdd }: { onAdd: () => void }) => (
   <div>
@@ -22,6 +24,8 @@ function BooksPage() {
   const [books, setBooks] = useState<Book[]>([]);
   const [availableGenres, setAvailableGenres] = useState<Genres[]>([]);
   const [filterGenres, setFilterGenres] = useState<Genres[]>([]);
+  const [page, setPage] = useState(1);
+  const [pages, setPages] = useState(1);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -29,14 +33,16 @@ function BooksPage() {
 
     (async () => {
       const [booksRes, genresRes] = await Promise.allSettled([
-        getBooks(),
+        getBooks(page, LIMIT),
         getGenres(),
       ]);
 
       if (!mounted) return;
 
       if (booksRes.status === "fulfilled") {
-        setBooks(booksRes.value);
+        const res = booksRes.value as PaginatedBooks;
+        setBooks(res.items);
+        setPages(res.pages);
       } else {
         console.error("Failed to load books:", booksRes.reason);
         setBooks([]);
@@ -62,7 +68,7 @@ function BooksPage() {
     return () => {
       mounted = false;
     };
-  }, []);
+  }, [page]);
 
   const filteredBooks = books.filter((book) =>
     filterGenres.length
@@ -105,6 +111,35 @@ function BooksPage() {
       ) : (
         <EmptyList onAdd={() => navigate("/books/new")} />
       )}
+
+      <div
+        style={{
+          marginTop: 28,
+          display: "flex",
+          justifyContent: "center",
+          gap: 24,
+        }}
+      >
+        <Button
+          variant="secondary"
+          onClick={() => setPage((p) => Math.max(1, p - 1))}
+          disabled={page === 1}
+        >
+          ◀ Prev
+        </Button>
+
+        <span>
+          Page {page} / {pages}
+        </span>
+
+        <Button
+          variant="secondary"
+          onClick={() => setPage((p) => (p < pages ? p + 1 : p))}
+          disabled={page === pages}
+        >
+          Next ▶
+        </Button>
+      </div>
     </Page>
   );
 }

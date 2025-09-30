@@ -2,18 +2,31 @@ import api from "../../api/client";
 import type { Book } from "./type";
 import type { Genres } from "./genres-type";
 
-const BOOKS_URL = "api/v1/books"; 
+const BOOKS_URL = "api/v1/books";
+const LIMIT = 4;
 
-// GET lista 
-export const getBooks = async () => {
-  const response = await api.get<Book[]>(BOOKS_URL);
-  return response.data;
+//Types
+export interface PaginatedBooks {
+  items: Book[];
+  page: number;
+  pages: number;
+}
+
+// GET lista paginada
+export const getBooks = async (
+  page = 1,
+  limit = LIMIT,
+): Promise<PaginatedBooks> => {
+  const { data } = await api.get<PaginatedBooks>(
+    `${BOOKS_URL}?page=${page}&limit=${limit}`,
+  );
+  return data;
 };
 
 // GET detalle
 export const getBook = async (bookId: string) => {
-  const response = await api.get<Book>(`${BOOKS_URL}/${bookId}`);
-  return response.data;
+  const { data } = await api.get<Book>(`${BOOKS_URL}/${bookId}`);
+  return data;
 };
 
 // POST
@@ -26,8 +39,8 @@ export const createBook = async (payload: {
   genre: string[];
   rating: number;        
 }) => {
-  const res = await api.post<Book>(BOOKS_URL, payload); 
-  return res.data;
+  const { data } = await api.post<Book>(BOOKS_URL, payload);
+  return data;
 };
 
 // DELETE

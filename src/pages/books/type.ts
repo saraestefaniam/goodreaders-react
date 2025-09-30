@@ -14,3 +14,9 @@ export interface Book {
   createdAt: string;
   updatedAt: string;
 }
+
+export interface PaginatedBooks {
+  items: Book[];
+  page: number;
+  pages: number;
+}
