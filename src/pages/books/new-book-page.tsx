@@ -6,18 +6,9 @@ import Button from "../../components/ui/button";
 import FormField from "../../components/ui/form-field";
 import { createBook, getGenres } from "./service";
 import type { Genres } from "./genres-type";
+import { FALLBACK_GENRES } from "./genres.constants";
 import { AxiosError } from "axios";
 import "./new-book-page.css";
-
-const FALLBACK_GENRES: Genres[] = [
-  "fantasy",
-  "science-fiction",
-  "romance",
-  "thriller",
-  "non-fiction",
-  "mystery",
-  "other",
-];
 
 function NewBookPage() {
   const navigate = useNavigate();
@@ -35,7 +26,9 @@ function NewBookPage() {
 
   useEffect(() => {
     getGenres()
-      .then((gs) => setAvailableGenres(gs))
+      .then((gs) =>
+        setAvailableGenres(Array.from(new Set([...gs, ...FALLBACK_GENRES]))),
+      )
       .catch(() => setAvailableGenres(FALLBACK_GENRES));
   }, []);
 
