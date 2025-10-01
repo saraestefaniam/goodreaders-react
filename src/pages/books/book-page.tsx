@@ -12,7 +12,6 @@ import {
   getWantToReadStatus,
 } from "./service";
 import type { Book } from "./type";
-import "./book-item.css";
 import "./book-page.css";
 
 function BookPage() {
@@ -190,97 +189,110 @@ function BookPage() {
         )}
 
         {status === "success" && book && (
-          <article className="book-item book-item--detail">
-            <div
-              className="book-item-media"
-              role="img"
-              aria-label={`Cover art for ${book.title}`}
-              style={{
-                backgroundImage: `url(${book.cover || "/descarga.png"})`,
-              }}
-            />
+          <article className="book-detail-card">
+            <div className="book-detail-hero">
+              <img
+                className="book-detail-cover"
+                src={book.cover || "/descarga.png"}
+                alt={`Cover art for ${book.title}`}
+              />
 
-            <div className="book-item-details">
-              <header className="book-item-details__header">
-                <h2 className="book-item-title">{book.title}</h2>
-                <p className="book-item-author">by {book.author}</p>
-                <div
-                  className="book-item-rating"
-                  aria-label={`Rating: ${ratingLabel}`}
-                  title={ratingLabel}
-                >
-                  {"★".repeat(book.rating) + "☆".repeat(5 - book.rating)}
-                </div>
-              </header>
-
-              {book.description && (
-                <p className="book-item-summary book-item-summary--detail">
-                  {book.description}
+              <div className="book-detail-summary">
+                <p className="book-detail-author">
+                  by <span>{book.author}</span>
                 </p>
-              )}
 
-              <section className="book-item-review">
-                <h3>Review</h3>
-                <p>{book.review}</p>
-              </section>
-
-              <div className="book-item-genres">
-                {book.genre.map((g) => (
-                  <span key={g} className="book-item-genre">
-                    #{g}
-                  </span>
-                ))}
-              </div>
-
-              <div className="book-item-meta">
-                {createdAt && <span>Added on {createdAt}</span>}
-                {updatedAt && updatedAt !== createdAt && (
-                  <span>Updated on {updatedAt}</span>
+                {book.genre.length > 0 && (
+                  <div className="book-detail-genres">
+                    {book.genre.map((g) => (
+                      <span key={g} className="book-detail-chip">
+                        #{g}
+                      </span>
+                    ))}
+                  </div>
                 )}
+
+                <div
+                  className="book-detail-rating"
+                  aria-label={`Rating: ${ratingLabel}`}
+                  title={`Rating: ${ratingLabel}`}
+                >
+                  <span className="book-detail-rating__stars" aria-hidden="true">
+                    {"★".repeat(book.rating) + "☆".repeat(5 - book.rating)}
+                  </span>
+                  <span className="book-detail-rating__value">{ratingLabel}</span>
+                </div>
+
+                {book.description && (
+                  <p className="book-detail-description">{book.description}</p>
+                )}
+
+                <div className="book-detail-meta">
+                  {createdAt && <span>Added on {createdAt}</span>}
+                  {updatedAt && updatedAt !== createdAt && (
+                    <span>Updated on {updatedAt}</span>
+                  )}
+                </div>
               </div>
 
-              <div className="book-item-actions">
+              <aside className="book-detail-sidebar">
                 <label
-                  className={`book-item-actions__toggle${
-                    isUpdatingWantToRead ? " book-item-actions__toggle--disabled" : ""
+                  className={`book-detail-toggle${
+                    isUpdatingWantToRead ? " book-detail-toggle--disabled" : ""
                   }`}
                 >
                   <input
+                    className="book-detail-toggle__input"
                     type="checkbox"
                     checked={isWantToRead}
                     onChange={handleWantToReadChange}
                     disabled={isUpdatingWantToRead}
                   />
-                  <span>
+                  <span
+                    className="book-detail-toggle__icon"
+                    aria-hidden="true"
+                  >
+                    {isWantToRead ? "✕" : "+"}
+                  </span>
+                  <span className="book-detail-toggle__text">
                     {isUpdatingWantToRead
-                      ? "Updating want to read…"
-                      : "Want to read"}
+                      ? "Updating…"
+                      : isWantToRead
+                        ? "Remove from list"
+                        : "Add to Want to Read"}
                   </span>
                 </label>
 
-                <Button
-                  type="button"
-                  variant="secondary"
-                  onClick={() => navigate("/books")}
-                >
-                  Back
-                </Button>
-
-                <Button
-                  type="button"
-                  variant="primary"
-                  onClick={() => setShowConfirm(true)}
-                >
-                  Delete
-                </Button>
-              </div>
-
-              {wantToReadError && (
-                <p className="book-item-actions__error" role="alert">
-                  {wantToReadError}
-                </p>
-              )}
+                {wantToReadError && (
+                  <p className="book-detail-toggle-error" role="alert">
+                    {wantToReadError}
+                  </p>
+                )}
+              </aside>
             </div>
+
+            <section className="book-detail-review">
+              <h3>Review</h3>
+              <p>{book.review}</p>
+            </section>
+
+            <footer className="book-detail-footer">
+              <Button
+                type="button"
+                variant="secondary"
+                onClick={() => navigate("/books")}
+              >
+                Back
+              </Button>
+
+              <Button
+                type="button"
+                variant="primary"
+                onClick={() => setShowConfirm(true)}
+              >
+                Delete
+              </Button>
+            </footer>
           </article>
         )}
       </div>
