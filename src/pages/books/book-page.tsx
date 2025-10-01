@@ -1,10 +1,16 @@
-import { ChangeEvent, useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import type { ChangeEvent } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { AxiosError } from "axios";
 import Page from "../../components/ui/layout/page";
 import ConfirmDialog from "../../components/ui/layout/confirm-dialog";
 import Button from "../../components/ui/button";
-import { getBook, deleteBook, updateWantToReadStatus } from "./service";
+import {
+  getBook,
+  deleteBook,
+  updateWantToReadStatus,
+  getWantToReadStatus,
+} from "./service";
 import type { Book } from "./type";
 import "./book-item.css";
 import "./book-page.css";
@@ -87,16 +93,20 @@ function BookPage() {
       return;
     }
 
-    setStatus("loading");
-    setErrorMessage(null);
+    let isMounted = true;
 
-    getBook(bookId)
-      .then((fetchedBook) => {
+    const loadBook = async () => {
+      setStatus("loading");
+      setErrorMessage(null);
+      setWantToReadError(null);
+
+      try {
+        const fetchedBook = await getBook(bookId);
+        if (!isMounted) return;
         setBook(fetchedBook);
-        setIsWantToRead(Boolean(fetchedBook.wantToRead));
         setStatus("success");
-      })
-      .catch((error) => {
+      } catch (error) {
+        if (!isMounted) return;
         if (error instanceof AxiosError) {
           const statusCode = error.response?.status;
           if (statusCode === 404) {
@@ -114,7 +124,41 @@ function BookPage() {
           setErrorMessage("Unable to load this book.");
         }
         setStatus("error");
-      });
+        return;
+      }
+
+      setIsUpdatingWantToRead(true);
+      try {
+        const statusResponse = await getWantToReadStatus(bookId);
+        if (!isMounted) return;
+        setIsWantToRead(Boolean(statusResponse.wantToRead));
+      } catch (error) {
+        if (!isMounted) return;
+        if (error instanceof AxiosError) {
+          const statusCode = error.response?.status;
+          if (statusCode === 401 || statusCode === 404) {
+            navigate("/login");
+            return;
+          }
+          setWantToReadError(
+            error.response?.data?.message ??
+              "Unable to load want-to-read status.",
+          );
+        } else {
+          setWantToReadError("Unable to load want-to-read status.");
+        }
+      } finally {
+        if (isMounted) {
+          setIsUpdatingWantToRead(false);
+        }
+      }
+    };
+
+    loadBook();
+
+    return () => {
+      isMounted = false;
+    };
   }, [bookId, navigate]);
 
   const ratingLabel = useMemo(() => {

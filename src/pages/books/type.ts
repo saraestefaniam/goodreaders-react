@@ -15,3 +15,8 @@ export interface Book {
   createdAt: string;
   updatedAt: string;
 }
+
+export interface WantToReadStatus {
+  bookId: string;
+  wantToRead: boolean;
+}
