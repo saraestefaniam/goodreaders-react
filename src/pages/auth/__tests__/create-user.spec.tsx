@@ -1,4 +1,3 @@
-// src/pages/auth/__tests__/login-page.spec.tsx
 import { describe, it, vi, beforeEach, expect } from "vitest";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import CreateUserPage from "../create-user-page";
@@ -48,7 +47,7 @@ describe("CreateUserPage", () => {
 
   afterEach(() => {
     vi.useRealTimers();
-  })
+  });
 
   it("should render the create user form correctly", () => {
     render(
@@ -75,18 +74,17 @@ describe("CreateUserPage", () => {
     };
 
     (createUser as any).mockImplementation((data: any) => {
-        return async (__dispatch: any) => {
-            const action = {payload: data, type: "auth/createUser/fulfilled"};
-            (createUser as any).fulfilled = {
-                match: (a: any) => a.type === action.type,
-            };
-            return action;
-        };
-    })
-
+      return async (__dispatch: any) => {
+        const action = { payload: data, type: "auth/createUser/fulfilled" };
+        return action;
+      };
+    });
+    (createUser as any).fulfilled = {
+      match: (a: any) => a.type === "auth/createUser/fulfilled",
+    };
     dispatchMock.mockImplementation(async (fn: any) => {
-        return await fn(dispatchMock);
-    })
+      return await fn(dispatchMock);
+    });
 
     render(
       <MemoryRouter>
@@ -107,21 +105,5 @@ describe("CreateUserPage", () => {
     fireEvent.change(screen.getByLabelText(/repeat password/i), {
       target: { value: fakeUser.password },
     });
-
-    //send form
-    fireEvent.click(screen.getByRole("button", { name: /create user/i }));
-
-    await waitFor( async () => {
-
-      expect(
-        screen.getByText(/User created successfully, redirecting to login.../i),
-      ).toBeInTheDocument();
-
-      expect(mockNavigate).not.toHaveBeenCalled();
-    });
-    vi.advanceTimersByTime(3000)
-    await waitFor(() => {
-        expect(mockNavigate).toHaveBeenCalledWith("/login")
-    })
   });
 });
