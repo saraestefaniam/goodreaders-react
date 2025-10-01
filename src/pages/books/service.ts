@@ -38,7 +38,7 @@ export const deleteBook = async (bookId: string) => {
 
 // SEARCH
 export async function searchBooks(query:string) {
-  const res = await fetch(`/api/books/search?q=${encodeURIComponent(query)}`)
+  const res = await fetch(`${BOOKS_URL}/search?q=${encodeURIComponent(query)}`)
   if (!res.ok) throw new Error("Error buscando libros")
     return res.json()
 }

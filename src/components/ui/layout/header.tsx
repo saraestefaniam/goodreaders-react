@@ -57,9 +57,20 @@ function Header() {
     }
   }, [showDropdown])
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setQuery(e.target.value)
-    if (!e.target.value.trim()) {
+  const handleInputChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value
+    setQuery(value)
+    if (!value.trim() || value.length < 3) {
+      setResults([])
+      setShowDropdown(false)
+      return
+    }
+    try {
+      const books = await searchBooks(value)
+      console.log("Resultados búsqueda:", books)
+      setResults(books)
+      setShowDropdown(books.length > 0)
+    } catch {
       setResults([])
       setShowDropdown(false)
     }

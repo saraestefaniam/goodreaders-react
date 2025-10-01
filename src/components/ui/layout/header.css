@@ -110,7 +110,7 @@
   background: #fff;
   border: 1px solid #ccc;
   border-radius: 4px;
-  z-index: 100;
+  z-index: 999;
   max-height: 250px;
   overflow-y: auto;
   list-style: none;
