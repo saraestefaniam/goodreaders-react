@@ -11,7 +11,10 @@
   padding: 0 24px;
   outline: none;
   text-decoration: none;
-  transition: filter .15s ease, background-color .15s ease, border-color .15s ease;
+  transition:
+    filter 0.15s ease,
+    background-color 0.15s ease,
+    border-color 0.15s ease;
 }
 
 .btn--primary {
@@ -21,11 +24,11 @@
 }
 
 .btn--primary:hover {
-  filter: brightness(.95);
+  filter: brightness(0.95);
 }
 
 .btn--primary:focus-visible {
-  outline: 2px solid rgba(var(--accent), .35);
+  outline: 2px solid rgba(var(--accent), 0.35);
   outline-offset: 2px;
 }
 
@@ -36,15 +39,15 @@
 }
 
 .btn--secondary:hover {
-  background: rgba(var(--accent), .08);
+  background: rgba(var(--accent), 0.08);
 }
 
 .btn--secondary:focus-visible {
-  outline: 2px solid rgba(var(--accent), .25);
+  outline: 2px solid rgba(var(--accent), 0.25);
   outline-offset: 2px;
 }
 
 .btn--disabled {
-  opacity: .5;
+  opacity: 0.5;
   pointer-events: none;
 }

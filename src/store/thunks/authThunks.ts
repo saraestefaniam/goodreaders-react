@@ -20,7 +20,7 @@ export const loginUser = createAsyncThunk(
   async (loginData: LoginPayload, { rejectWithValue }) => {
     try {
       const response = await api.post("/api/v1/auth/login", loginData);
-      return { token: response.data.access_token }
+      return { token: response.data.access_token };
     } catch (error) {
       if (axios.isAxiosError(error) && error.response) {
         return rejectWithValue(error.response.data.message || "Error login");

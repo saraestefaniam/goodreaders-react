@@ -11,10 +11,10 @@ function Header() {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const isLogged = useAppSelector(selectIsLogged);
-  const [results, setResults] = useState<any[]>([])
-  const [query, setQuery] = useState("")
-  const [showDropdown, setShowDropdown] = useState(false)
-  const dropdownRef = useRef<HTMLDivElement>(null)
+  const [results, setResults] = useState<any[]>([]);
+  const [query, setQuery] = useState("");
+  const [showDropdown, setShowDropdown] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
   const handleLogout = () => {
     dispatch(logout());
@@ -22,21 +22,21 @@ function Header() {
   };
 
   const handleSearch = async (e: React.FormEvent) => {
-    e.preventDefault()
+    e.preventDefault();
     if (!query.trim()) {
-      setResults([])
-      setShowDropdown(false)
-      return
+      setResults([]);
+      setShowDropdown(false);
+      return;
     }
     try {
-      const books = await searchBooks(query)
-      setResults(books)
-      setShowDropdown(true)
+      const books = await searchBooks(query);
+      setResults(books);
+      setShowDropdown(true);
     } catch (error) {
-      setResults([])
-      setShowDropdown(false)
+      setResults([]);
+      setShowDropdown(false);
     }
-  }
+  };
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -44,44 +44,44 @@ function Header() {
         dropdownRef.current &&
         !dropdownRef.current.contains(event.target as Node)
       ) {
-        setShowDropdown(false)
+        setShowDropdown(false);
       }
     }
     if (showDropdown) {
-      document.addEventListener("mousedown", handleClickOutside)
+      document.addEventListener("mousedown", handleClickOutside);
     } else {
-      document.removeEventListener("mousedown", handleClickOutside)
+      document.removeEventListener("mousedown", handleClickOutside);
     }
     return () => {
-      document.removeEventListener("mousedown", handleClickOutside)
-    }
-  }, [showDropdown])
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [showDropdown]);
 
   const handleInputChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value
-    setQuery(value)
+    const value = e.target.value;
+    setQuery(value);
     if (!value.trim() || value.length < 3) {
-      setResults([])
-      setShowDropdown(false)
-      return
+      setResults([]);
+      setShowDropdown(false);
+      return;
     }
     try {
-      const books = await searchBooks(value)
-      console.log("Resultados búsqueda:", books)
-      setResults(books)
-      setShowDropdown(books.length > 0)
+      const books = await searchBooks(value);
+      console.log("Resultados búsqueda:", books);
+      setResults(books);
+      setShowDropdown(books.length > 0);
     } catch {
-      setResults([])
-      setShowDropdown(false)
+      setResults([]);
+      setShowDropdown(false);
     }
-  }
+  };
 
   const handleResultClick = (bookId: string) => {
-    setShowDropdown(false)
-    setQuery("")
-    setResults([])
-    navigate(`/books/${bookId}`)
-  }
+    setShowDropdown(false);
+    setQuery("");
+    setResults([]);
+    navigate(`/books/${bookId}`);
+  };
 
   return (
     <header className="header">
@@ -99,7 +99,7 @@ function Header() {
 
         <div className="header-search" ref={dropdownRef}>
           <form onSubmit={handleSearch} autoComplete="off">
-            <input 
+            <input
               type="text"
               className="search-input"
               placeholder="Search"
@@ -116,12 +116,10 @@ function Header() {
                   key={book.id || book._id}
                   className="search-result"
                   onClick={() => handleResultClick(book.id || book._id)}
-                  onMouseDown={e => e.preventDefault()}
+                  onMouseDown={(e) => e.preventDefault()}
                 >
                   <strong>{book.title}</strong>
-                  <span className="search-result-author">
-                    {book.author}
-                  </span>
+                  <span className="search-result-author">{book.author}</span>
                 </li>
               ))}
             </ul>
@@ -129,7 +127,9 @@ function Header() {
         </div>
 
         {isLogged ? (
-          <NavLink to="/login" onClick={handleLogout} className="header-nav">Logout</NavLink>
+          <NavLink to="/login" onClick={handleLogout} className="header-nav">
+            Logout
+          </NavLink>
         ) : (
           <NavLink to="/login" className="header-nav">
             Login

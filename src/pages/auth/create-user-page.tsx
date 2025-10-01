@@ -95,7 +95,9 @@ const CreateUserPage = () => {
 
           {error && <div className="auth-alert">{error}</div>}
           {passwordError && <div className="auth-alert">{passwordError}</div>}
-          {successfulMessage && <div className="auth-alert success">{successfulMessage}</div>}
+          {successfulMessage && (
+            <div className="auth-alert success">{successfulMessage}</div>
+          )}
 
           <form className="auth-form" onSubmit={handleSubmit}>
             <div>

@@ -2,9 +2,9 @@ import api from "../../api/client";
 import type { Book } from "./type";
 import type { Genres } from "./genres-type";
 
-const BOOKS_URL = "api/v1/books"; 
+const BOOKS_URL = "api/v1/books";
 
-// GET lista 
+// GET lista
 export const getBooks = async () => {
   const response = await api.get<Book[]>(BOOKS_URL);
   return response.data;
@@ -22,11 +22,11 @@ export const createBook = async (payload: {
   author: string;
   description?: string;
   review: string;
-  cover?: string;        
+  cover?: string;
   genre: string[];
-  rating: number;        
+  rating: number;
 }) => {
-  const res = await api.post<Book>(BOOKS_URL, payload); 
+  const res = await api.post<Book>(BOOKS_URL, payload);
   return res.data;
 };
 
@@ -37,10 +37,10 @@ export const deleteBook = async (bookId: string) => {
 };
 
 // SEARCH
-export async function searchBooks(query:string) {
-  const res = await fetch(`${BOOKS_URL}/search?q=${encodeURIComponent(query)}`)
-  if (!res.ok) throw new Error("Error buscando libros")
-    return res.json()
+export async function searchBooks(query: string) {
+  const res = await fetch(`${BOOKS_URL}/search?q=${encodeURIComponent(query)}`);
+  if (!res.ok) throw new Error("Error buscando libros");
+  return res.json();
 }
 
 // GET Genres

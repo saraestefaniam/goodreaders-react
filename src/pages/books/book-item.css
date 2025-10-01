@@ -6,12 +6,14 @@
   border-radius: 6px;
   box-shadow: var(--shadow-sm);
   overflow: hidden;
-  transition: transform .12s ease, box-shadow .12s ease;
+  transition:
+    transform 0.12s ease,
+    box-shadow 0.12s ease;
 }
 
 .book-item:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, .08);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
 .book-item-image {
