@@ -86,51 +86,29 @@ function Header() {
         </NavLink>
         <NavLink to="/books/new">Add new book</NavLink>
 
-        <div className="header-search" style={{position: "relative"}} ref={dropdownRef}>
+        <div className="header-search" ref={dropdownRef}>
           <form onSubmit={handleSearch} autoComplete="off">
             <input 
               type="text"
-              placeholder="Buscar libros"
+              className="search-input"
+              placeholder="Search"
               value={query}
               onChange={handleInputChange}
               onFocus={() => results.length > 0 && setShowDropdown(true)}
-              style={{padding: "0.3rem 0.5rem"}}
             />
             {/* <button type="submit" style={{marginLeft: "0.5rem"}}>Buscar</button> */}
           </form>
           {showDropdown && results.length > 0 && (
-            <ul
-              className="search-dropdown"
-              style={{
-                position: "absolute",
-                top: "2.2rem",
-                left: 0,
-                right: 0,
-                background: "#fff",
-                border: "1px solid #ccc",
-                borderRadius: "4px",
-                zIndex: 100,
-                maxHeight: "250px",
-                overflowY: "auto",
-                listStyle: "none",
-                margin: 0,
-                padding: 0,
-                boxShadow: "0 2px 8px rgba(0,0,0,0.1)"
-              }}
-            >
+            <ul className="search-dropdown">
               {results.map((book) => (
                 <li
                   key={book.id || book._id}
+                  className="search-result"
                   onClick={() => handleResultClick(book.id || book._id)}
-                  style={{
-                    padding: "0.5rem 1rem",
-                    cursor: "pointer",
-                    borderBottom: "1px solid #eee"
-                  }}
                   onMouseDown={e => e.preventDefault()}
                 >
                   <strong>{book.title}</strong>
-                  <span style={{ color: "#666", marginLeft: "0.5rem" }}>
+                  <span className="search-result-author">
                     {book.author}
                   </span>
                 </li>
