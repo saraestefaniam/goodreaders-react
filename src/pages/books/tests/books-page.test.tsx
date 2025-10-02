@@ -60,6 +60,8 @@ describe("BooksPage", () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
+    localStorage.clear();
+    sessionStorage.clear();
   });
 
   it("renders books list and links to detail", async () => {
@@ -106,7 +108,7 @@ describe("BooksPage", () => {
     expect(screen.getByText("Warbreaker")).toBeInTheDocument();
   });
 
-  it("shows empty state and navigates to /books/new on button click", async () => {
+  it("redirects to login when Add Book is clicked without auth", async () => {
     (service.getBooks as Mock).mockResolvedValue([]);
     (service.getGenres as Mock).mockResolvedValue(["fantasy"]);
 
@@ -119,6 +121,26 @@ describe("BooksPage", () => {
     expect(
       await screen.findByText(/No books yet\. Be the first to add one!/i),
     ).toBeInTheDocument();
+
+    await user.click(screen.getByRole("button", { name: /add book/i }));
+    expect(mockNavigate).toHaveBeenCalledWith("/login", {
+      replace: true,
+      state: { from: "/books/new" },
+    });
+  });
+
+  it("navigates to /books/new when authenticated", async () => {
+    (service.getBooks as Mock).mockResolvedValue([]);
+    (service.getGenres as Mock).mockResolvedValue(["fantasy"]);
+    localStorage.setItem("auth", "token");
+
+    render(
+      <MemoryRouter>
+        <BooksPage />
+      </MemoryRouter>,
+    );
+
+    await screen.findByText(/No books yet\. Be the first to add one!/i);
 
     await user.click(screen.getByRole("button", { name: /add book/i }));
     expect(mockNavigate).toHaveBeenCalledWith("/books/new");

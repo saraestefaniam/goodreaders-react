@@ -8,6 +8,7 @@ import Button from "../../components/ui/button";
 import BookItem from "./book-item";
 import { Link, useNavigate } from "react-router-dom";
 import Spinner from "../../components/ui/spinner";
+import storage from "../../utils/storage";
 import "../../index.css";
 import "./books-pages.css";
 
@@ -26,6 +27,7 @@ function BooksPage() {
   const [filterGenres, setFilterGenres] = useState<Genres[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [showAlert, setShowAlert] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -33,6 +35,7 @@ function BooksPage() {
 
     setIsLoading(true);
     setErrorMessage(null);
+    setShowAlert(false);
 
     (async () => {
       const [booksRes, genresRes] = await Promise.allSettled([
@@ -48,6 +51,7 @@ function BooksPage() {
         console.error("Failed to load books:", booksRes.reason);
         setBooks([]);
         setErrorMessage("We couldn't load the books list.");
+        setShowAlert(true);
       }
 
       if (genresRes.status === "fulfilled") {
@@ -58,6 +62,7 @@ function BooksPage() {
         console.error("Failed to load genres:", genresRes.reason);
         setAvailableGenres(FALLBACK_GENRES);
         setErrorMessage((prev) => prev ?? "Some filters couldn't be loaded.");
+        setShowAlert(true);
       }
 
       setIsLoading(false);
@@ -68,19 +73,41 @@ function BooksPage() {
     };
   }, []);
 
+  useEffect(() => {
+    if (!errorMessage) return;
+
+    const timer = window.setTimeout(() => {
+      setShowAlert(false);
+    }, 5000);
+
+    return () => window.clearTimeout(timer);
+  }, [errorMessage]);
+
   const filteredBooks = books.filter((book) =>
     filterGenres.length
       ? filterGenres.some((g) => book.genre.includes(g))
       : true,
   );
 
+  const handleAddBook = () => {
+    const token = storage.get("auth");
+    if (!token) {
+      navigate("/login", { replace: true, state: { from: "/books/new" } });
+      return;
+    }
+    navigate("/books/new");
+  };
+
   return (
     <Page title="Books">
       {isLoading && <Spinner label="Loading books…" />}
 
-      {!isLoading && errorMessage && (
-        <div className="book-detail__state book-detail__state--error">
-          {errorMessage}
+      {!isLoading && showAlert && errorMessage && (
+        <div className="books-page-alert" role="alert">
+          <span className="books-page-alert__icon" aria-hidden="true">
+            !
+          </span>
+          <span className="books-page-alert__message">{errorMessage}</span>
         </div>
       )}
 
@@ -115,7 +142,7 @@ function BooksPage() {
           ))}
         </div>
       ) : (
-        <EmptyList onAdd={() => navigate("/books/new")} />
+        <EmptyList onAdd={handleAddBook} />
       )}
     </Page>
   );

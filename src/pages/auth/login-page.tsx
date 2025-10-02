@@ -45,45 +45,51 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-[var(--color-bg)]">
-      <div className="w-full max-w-md rounded-lg bg-white p-8 shadow-md">
-        <h1 className="mb-6 text-center text-2xl font-bold text-[var(--color-primary)]">
-          Login
-        </h1>
-        <form className="space-y-4" onSubmit={handleSubmit}>
-          <div>
-            <FormField
-              label="Email"
-              name="email"
-              value={form.email}
-              onChange={handleChange}
-              placeholder="email"
-              required
-            />
-            <br />
-            <FormField
-              label="Password"
-              name="password"
-              type="password"
-              value={form.password}
-              onChange={handleChange}
-              placeholder="password"
-              required
-            />
-          </div>
-          <label>
+    <div className="auth-page">
+      <div className="auth-card">
+        <h1 className="auth-title">Welcome back</h1>
+
+        {error && <div className="auth-alert">{error}</div>}
+
+        <form className="auth-form" onSubmit={handleSubmit}>
+          <FormField
+            label="Email"
+            name="email"
+            value={form.email}
+            onChange={handleChange}
+            placeholder="you@example.com"
+            type="email"
+            required
+          />
+
+          <FormField
+            label="Password"
+            name="password"
+            type="password"
+            value={form.password}
+            onChange={handleChange}
+            placeholder="••••••••"
+            required
+          />
+
+          <label className="auth-remember">
             <input
               type="checkbox"
               checked={rememberUser}
               onChange={(event) => setRememberUser(event.target.checked)}
-            />{" "}
+            />
             Remember me
           </label>
-          <br />
-          <Button type="submit" variant="primary" disabled={disabled || loading}>
-            {loading ? <Spinner inline size="sm" label="Signing in…" /> : "Login"}
-          </Button>
-          {error && <p>{error}</p>}
+
+          <div className="auth-actions">
+            <span className="auth-alt-action">
+              No account yet? <a href="/new-user">Create one</a>
+            </span>
+
+            <Button type="submit" variant="primary" disabled={disabled || loading}>
+              {loading ? <Spinner inline size="sm" label="Signing in…" /> : "Login"}
+            </Button>
+          </div>
         </form>
       </div>
     </div>

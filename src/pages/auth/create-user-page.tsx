@@ -96,90 +96,74 @@ const CreateUserPage = () => {
 
           {error && <div className="auth-alert">{error}</div>}
           {passwordError && <div className="auth-alert">{passwordError}</div>}
-          {successfulMessage && <div className="auth-alert success">{successfulMessage}</div>}
+          {successfulMessage && (
+            <div className="auth-alert success">{successfulMessage}</div>
+          )}
 
           <form className="auth-form" onSubmit={handleSubmit}>
-            <div>
-              <label htmlFor="name" className="auth-label">
-                Username
-              </label>
-              <FormField
-                label="Username"
-                id="name"
-                name="name"
-                type="text"
-                value={form.name}
-                onChange={handleChange}
-                placeholder="Your username"
-                required
-              />
-            </div>
+            <FormField
+              label="Username"
+              id="name"
+              name="name"
+              type="text"
+              value={form.name}
+              onChange={handleChange}
+              placeholder="Your username"
+              required
+            />
 
-            <div>
-              <label htmlFor="email" className="auth-label">
-                Email
-              </label>
-              <FormField
-                label="Email"
-                id="email"
-                name="email"
-                type="email"
-                value={form.email}
-                onChange={handleChange}
-                placeholder="you@example.com"
-                required
-              />
-            </div>
+            <FormField
+              label="Email"
+              id="email"
+              name="email"
+              type="email"
+              value={form.email}
+              onChange={handleChange}
+              placeholder="you@example.com"
+              required
+            />
 
-            <div>
-              <label htmlFor="password" className="auth-label">
-                Password
-              </label>
-              <FormField
-                label="Password"
-                id="password"
-                name="password"
-                type="password"
-                value={form.password}
-                onChange={handleChange}
-                placeholder="••••••••"
-                required
-                minLength={6}
-              />
-            </div>
+            <FormField
+              label="Password"
+              id="password"
+              name="password"
+              type="password"
+              value={form.password}
+              onChange={handleChange}
+              placeholder="••••••••"
+              required
+              minLength={6}
+            />
 
-            <div>
-              <label htmlFor="passwordAgain" className="auth-label">
-                Repeat password
-              </label>
-              <FormField
-                label="Repeat password"
-                id="passwordAgain"
-                name="passwordAgain"
-                type="password"
-                value={form.passwordAgain}
-                onChange={handleChange}
-                placeholder="••••••••"
-                required
-                minLength={6}
-              />
-            </div>
+            <FormField
+              label="Repeat password"
+              id="passwordAgain"
+              name="passwordAgain"
+              type="password"
+              value={form.passwordAgain}
+              onChange={handleChange}
+              placeholder="••••••••"
+              required
+              minLength={6}
+            />
 
-            <div>
-              <label htmlFor="avatar" className="auth-label">
-                Avatar (optional)
-              </label>
+            <label className="form-field">
+              <span className="form-field__label">Avatar (optional)</span>
               <input
+                className="form-field__input"
                 id="avatar"
                 name="avatar"
                 type="file"
                 accept="image/*"
                 onChange={handleChange}
-                className="auth-input"
               />
-            </div>
+            </label>
 
             <div className="auth-actions">
+              <span className="auth-alt-action">
+                Already registered? <a href="/login">Sign in</a>
+              </span>
+
               <Button
                 type="submit"
                 variant="primary"
