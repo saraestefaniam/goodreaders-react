@@ -7,6 +7,7 @@ import Page from "../../components/ui/layout/page";
 import Button from "../../components/ui/button";
 import BookItem from "./book-item";
 import { Link, useNavigate } from "react-router-dom";
+import Spinner from "../../components/ui/spinner";
 import "../../index.css";
 import "./books-pages.css";
 
@@ -23,10 +24,15 @@ function BooksPage() {
   const [books, setBooks] = useState<Book[]>([]);
   const [availableGenres, setAvailableGenres] = useState<Genres[]>([]);
   const [filterGenres, setFilterGenres] = useState<Genres[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const navigate = useNavigate();
 
   useEffect(() => {
     let mounted = true;
+
+    setIsLoading(true);
+    setErrorMessage(null);
 
     (async () => {
       const [booksRes, genresRes] = await Promise.allSettled([
@@ -41,6 +47,7 @@ function BooksPage() {
       } else {
         console.error("Failed to load books:", booksRes.reason);
         setBooks([]);
+        setErrorMessage("We couldn't load the books list.");
       }
 
       if (genresRes.status === "fulfilled") {
@@ -50,7 +57,10 @@ function BooksPage() {
       } else {
         console.error("Failed to load genres:", genresRes.reason);
         setAvailableGenres(FALLBACK_GENRES);
+        setErrorMessage((prev) => prev ?? "Some filters couldn't be loaded.");
       }
+
+      setIsLoading(false);
     })();
 
     return () => {
@@ -66,6 +76,14 @@ function BooksPage() {
 
   return (
     <Page title="Books">
+      {isLoading && <Spinner label="Loading books…" />}
+
+      {!isLoading && errorMessage && (
+        <div className="book-detail__state book-detail__state--error">
+          {errorMessage}
+        </div>
+      )}
+
       <form className="filter-form">
         <div className="filter-tags">
           Genres:

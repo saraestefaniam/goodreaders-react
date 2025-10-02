@@ -1,5 +1,6 @@
 import FormField from "../../components/ui/form-field";
 import Button from "../../components/ui/button";
+import Spinner from "../../components/ui/spinner";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import { useState } from "react";
 import { createUser } from "../../store/thunks/authThunks";
@@ -185,7 +186,11 @@ const CreateUserPage = () => {
                 disabled={loading}
                 className="auth-submit"
               >
-                {loading ? "Creating user..." : "Create user"}
+                {loading ? (
+                  <Spinner inline size="sm" label="Creating user…" />
+                ) : (
+                  "Create user"
+                )}
               </Button>
             </div>
           </form>

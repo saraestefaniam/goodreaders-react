@@ -1,5 +1,6 @@
 import FormField from "../../components/ui/form-field";
 import Button from "../../components/ui/button";
+import Spinner from "../../components/ui/spinner";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import { useState } from "react";
 import "./auth.css";
@@ -79,8 +80,8 @@ const LoginPage = () => {
             Remember me
           </label>
           <br />
-          <Button type="submit" variant="primary" disabled={disabled}>
-            {loading ? "Login in..." : "Login"}
+          <Button type="submit" variant="primary" disabled={disabled || loading}>
+            {loading ? <Spinner inline size="sm" label="Signing in…" /> : "Login"}
           </Button>
           {error && <p>{error}</p>}
         </form>

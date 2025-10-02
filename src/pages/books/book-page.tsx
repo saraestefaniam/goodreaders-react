@@ -3,6 +3,7 @@ import type { ChangeEvent } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { AxiosError } from "axios";
 import Page from "../../components/ui/layout/page";
+import Spinner from "../../components/ui/spinner";
 import ConfirmDialog from "../../components/ui/layout/confirm-dialog";
 import Button from "../../components/ui/button";
 import {
@@ -35,10 +36,10 @@ function BookPage() {
       navigate("/books");
     } catch (error) {
       if (error instanceof AxiosError) {
-        const status = error.response?.status;
-        if (status === 404) {
+        const statusCode = error.response?.status;
+        if (statusCode === 404) {
           navigate("/404");
-        } else if (status === 401) {
+        } else if (statusCode === 401) {
           navigate("/login");
         } else {
           console.error("Unexpected error while deleting:", error);
@@ -178,9 +179,7 @@ function BookPage() {
   return (
     <Page title={book ? book.title : "Book detail"}>
       <div className="book-detail">
-        {status === "loading" && (
-          <div className="book-detail__state">Loading book…</div>
-        )}
+        {status === "loading" && <Spinner label="Loading book…" />}
 
         {status === "error" && (
           <div className="book-detail__state book-detail__state--error">

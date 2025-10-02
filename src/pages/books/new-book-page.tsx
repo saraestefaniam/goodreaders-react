@@ -1,14 +1,15 @@
 // src/pages/books/new-book-page.tsx
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Page from "../../components/ui/layout/page";
-import Button from "../../components/ui/button";
-import FormField from "../../components/ui/form-field";
 import { createBook, getGenres } from "./service";
 import type { Genres } from "./genres-type";
 import { FALLBACK_GENRES } from "./genres.constants";
 import { AxiosError } from "axios";
 import "./new-book-page.css";
+import Page from "../../components/ui/layout/page";
+import Button from "../../components/ui/button";
+import FormField from "../../components/ui/form-field";
+import Spinner from "../../components/ui/spinner";
 
 function NewBookPage() {
   const navigate = useNavigate();
@@ -148,18 +149,22 @@ function NewBookPage() {
 
         <fieldset className="new-book-page-fieldset">
           <legend className="new-book-page-legend">Genres *</legend>
-          <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
-            {availableGenres.map((g) => (
-              <label key={g} className="new-book-page-checkbox">
-                <input
-                  type="checkbox"
-                  checked={genres.includes(g)}
-                  onChange={() => handleToggleGenre(g)}
-                />
-                <span>#{g}</span>
-              </label>
-            ))}
-          </div>
+          {availableGenres.length === 0 ? (
+            <Spinner label="Loading genres…" />
+          ) : (
+            <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
+              {availableGenres.map((g) => (
+                <label key={g} className="new-book-page-checkbox">
+                  <input
+                    type="checkbox"
+                    checked={genres.includes(g)}
+                    onChange={() => handleToggleGenre(g)}
+                  />
+                  <span>#{g}</span>
+                </label>
+              ))}
+            </div>
+          )}
         </fieldset>
 
         <label className="new-book-page-label">
@@ -185,7 +190,11 @@ function NewBookPage() {
             disabled={!isFormValid || submitting}
             className="new-book-page-submit"
           >
-            {submitting ? "Creating..." : "Create book"}
+            {submitting ? (
+              <Spinner inline size="sm" label="Creating…" />
+            ) : (
+              "Create book"
+            )}
           </Button>
           <Button
             type="button"
