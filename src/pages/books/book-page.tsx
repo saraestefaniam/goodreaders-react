@@ -197,40 +197,34 @@ function BookPage() {
               />
 
               <div className="book-detail-summary">
-                <p className="book-detail-author">
-                  by <span>{book.author}</span>
-                </p>
+                <div className="book-detail-summary-header">
+                  <p className="book-detail-author">
+                    by <span>{book.author}</span>
+                  </p>
 
-                {book.genre.length > 0 && (
-                  <div className="book-detail-genres">
-                    {book.genre.map((g) => (
-                      <span key={g} className="book-detail-chip">
-                        #{g}
-                      </span>
-                    ))}
-                  </div>
-                )}
-
-                <div
-                  className="book-detail-rating"
-                  aria-label={`Rating: ${ratingLabel}`}
-                  title={`Rating: ${ratingLabel}`}
-                >
-                  <span className="book-detail-rating__stars" aria-hidden="true">
-                    {"★".repeat(book.rating) + "☆".repeat(5 - book.rating)}
-                  </span>
-                  <span className="book-detail-rating__value">{ratingLabel}</span>
-                </div>
-
-                {book.description && (
-                  <p className="book-detail-description">{book.description}</p>
-                )}
-
-                <div className="book-detail-meta">
-                  {createdAt && <span>Added on {createdAt}</span>}
-                  {updatedAt && updatedAt !== createdAt && (
-                    <span>Updated on {updatedAt}</span>
+                  {book.genre.length > 0 && (
+                    <div className="book-detail-genres">
+                      {book.genre.map((g) => (
+                        <span key={g} className="book-detail-chip">
+                          #{g}
+                        </span>
+                      ))}
+                    </div>
                   )}
+
+                  <div
+                    className="book-detail-rating"
+                    aria-label={`Rating: ${ratingLabel}`}
+                    title={`Rating: ${ratingLabel}`}
+                  >
+                    <span
+                      className="book-detail-rating__stars"
+                      aria-hidden="true"
+                    >
+                      {"★".repeat(book.rating) + "☆".repeat(5 - book.rating)}
+                    </span>
+                    <span className="book-detail-rating__value">{ratingLabel}</span>
+                  </div>
                 </div>
               </div>
 
@@ -269,6 +263,19 @@ function BookPage() {
                 )}
               </aside>
             </div>
+
+            <section className="book-detail-description-block">
+              {book.description && (
+                <p className="book-detail-description">{book.description}</p>
+              )}
+
+              <div className="book-detail-meta">
+                {createdAt && <span>Added on {createdAt}</span>}
+                {updatedAt && updatedAt !== createdAt && (
+                  <span>Updated on {updatedAt}</span>
+                )}
+              </div>
+            </section>
 
             <section className="book-detail-review">
               <h3>Review</h3>
