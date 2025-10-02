@@ -1,8 +1,9 @@
 import api from "../../api/client";
-import type { Book } from "./type";
+import type { Book, WantToReadStatus } from "./type";
 import type { Genres } from "./genres-type";
 
 const BOOKS_URL = "api/v1/books"; 
+const WANT_TO_READ_URL = "api/v1/users/want-to-read";
 
 // GET lista 
 export const getBooks = async () => {
@@ -36,8 +37,25 @@ export const deleteBook = async (bookId: string) => {
   await api.delete(url);
 };
 
+// PATCH Want to read status
+export const updateWantToReadStatus = async (
+  bookId: string,
+  wantToRead: boolean,
+) => {
+  await api.patch(`${WANT_TO_READ_URL}/${bookId}`, { wantToRead });
+};
+
+//GET Want to read status
+export const getWantToReadStatus = async (bookId: string) => {
+  const { data } = await api.get<WantToReadStatus>(
+    `${WANT_TO_READ_URL}/${bookId}`,
+  );
+  return data;
+};
+
 // GET Genres
 export const getGenres = async (): Promise<Genres[]> => {
   const { data } = await api.get<Genres[]>(`${BOOKS_URL}/genres`);
   return data;
 };
+ 

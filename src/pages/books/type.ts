@@ -11,6 +11,12 @@ export interface Book {
   cover?: string;
   genre: Genres[];
   rating: Rating;
+  wantToRead?: boolean;
   createdAt: string;
   updatedAt: string;
+}
+
+export interface WantToReadStatus {
+  bookId: string;
+  wantToRead: boolean;
 }

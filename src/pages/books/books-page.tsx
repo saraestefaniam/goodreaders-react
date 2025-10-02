@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { getBooks, getGenres } from "./service";
 import type { Book } from "./type";
 import type { Genres } from "./genres-type";
+import { FALLBACK_GENRES } from "./genres.constants";
 import Page from "../../components/ui/layout/page";
 import Button from "../../components/ui/button";
 import BookItem from "./book-item";
@@ -43,19 +44,12 @@ function BooksPage() {
       }
 
       if (genresRes.status === "fulfilled") {
-        setAvailableGenres(genresRes.value);
+        setAvailableGenres(
+          Array.from(new Set([...genresRes.value, ...FALLBACK_GENRES])),
+        );
       } else {
         console.error("Failed to load genres:", genresRes.reason);
-        // Fallback coherente con tu tipo `Genres`
-        setAvailableGenres([
-          "fantasy",
-          "science-fiction",
-          "romance",
-          "thriller",
-          "non-fiction",
-          "mystery",
-          "other",
-        ]);
+        setAvailableGenres(FALLBACK_GENRES);
       }
     })();
 
