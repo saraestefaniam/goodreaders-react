@@ -27,7 +27,6 @@ function BooksPage() {
   const [filterGenres, setFilterGenres] = useState<Genres[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const [showAlert, setShowAlert] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -35,7 +34,6 @@ function BooksPage() {
 
     setIsLoading(true);
     setErrorMessage(null);
-    setShowAlert(false);
 
     (async () => {
       const [booksRes, genresRes] = await Promise.allSettled([
@@ -46,12 +44,20 @@ function BooksPage() {
       if (!mounted) return;
 
       if (booksRes.status === "fulfilled") {
-        setBooks(booksRes.value);
+        if (Array.isArray(booksRes.value)) {
+          setBooks(booksRes.value);
+        } else {
+          console.error(
+            "Books response was not an array as expected:",
+            booksRes.value,
+          );
+          setBooks([]);
+          setErrorMessage("We couldn't load the books list.");
+        }
       } else {
         console.error("Failed to load books:", booksRes.reason);
         setBooks([]);
         setErrorMessage("We couldn't load the books list.");
-        setShowAlert(true);
       }
 
       if (genresRes.status === "fulfilled") {
@@ -61,8 +67,6 @@ function BooksPage() {
       } else {
         console.error("Failed to load genres:", genresRes.reason);
         setAvailableGenres(FALLBACK_GENRES);
-        setErrorMessage((prev) => prev ?? "Some filters couldn't be loaded.");
-        setShowAlert(true);
       }
 
       setIsLoading(false);
@@ -72,16 +76,6 @@ function BooksPage() {
       mounted = false;
     };
   }, []);
-
-  useEffect(() => {
-    if (!errorMessage) return;
-
-    const timer = window.setTimeout(() => {
-      setShowAlert(false);
-    }, 5000);
-
-    return () => window.clearTimeout(timer);
-  }, [errorMessage]);
 
   const filteredBooks = books.filter((book) =>
     filterGenres.length
@@ -102,12 +96,9 @@ function BooksPage() {
     <Page title="Books">
       {isLoading && <Spinner label="Loading books…" />}
 
-      {!isLoading && showAlert && errorMessage && (
+      {!isLoading && errorMessage && (
         <div className="books-page-alert" role="alert">
-          <span className="books-page-alert__icon" aria-hidden="true">
-            !
-          </span>
-          <span className="books-page-alert__message">{errorMessage}</span>
+          {errorMessage}
         </div>
       )}
 

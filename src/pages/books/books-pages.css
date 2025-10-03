@@ -52,34 +52,6 @@
     0 12px 24px rgba(15, 23, 42, 0.12);
 }
 
-.books-page-alert {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-bottom: 20px;
-  padding: 14px 18px;
-  border-radius: 18px;
-  background: rgba(248, 113, 113, 0.08);
-  border: 1px solid rgba(220, 38, 38, 0.45);
-  color: rgb(153, 27, 27);
-  box-shadow: 0 12px 24px rgba(220, 38, 38, 0.08);
-}
-
-.books-page-alert__icon {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
-  background: rgba(220, 38, 38, 0.12);
-  font-weight: 700;
-}
-
-.books-page-alert__message {
-  font-size: 0.95rem;
-  font-weight: 600;
-}
 
 @media (min-width: 480px) {
   .book-list {

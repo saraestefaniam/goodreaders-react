@@ -20,3 +20,11 @@ export interface WantToReadStatus {
   bookId: string;
   wantToRead: boolean;
 }
+
+export interface BooksListResponse {
+  items: Book[];
+  total: number;
+  page: number;
+  limit: number;
+  pages: number;
+}

@@ -1,7 +1,10 @@
 .new-book-page-wrapper {
   display: flex;
   justify-content: center;
-  padding: clamp(24px, 6vw, 56px);
+  align-items: center;
+  padding: clamp(36px, 8vw, 72px) clamp(16px, 5vw, 48px);
+  min-height: calc(100vh - 160px);
+  width: 100%;
   background:
     radial-gradient(circle at 20% 20%, rgba(37, 99, 235, 0.09), transparent 60%),
     radial-gradient(circle at 80% 15%, rgba(16, 185, 129, 0.1), transparent 55%),
@@ -13,7 +16,7 @@
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
   gap: clamp(18px, 3vw, 32px);
-  padding: clamp(28px, 5vw, 44px);
+  padding: clamp(32px, 5vw, 48px);
   border-radius: 32px;
   background: rgba(255, 255, 255, 0.92);
   backdrop-filter: blur(12px);
@@ -22,17 +25,17 @@
   align-items: start;
 }
 
-.new-book-page-form > :nth-child(1),
-.new-book-page-form > :nth-child(2),
-.new-book-page-form > :nth-child(5),
-.new-book-page-form > .new-book-page-rating {
+.new-book-page-form> :nth-child(1),
+.new-book-page-form> :nth-child(2),
+.new-book-page-form> :nth-child(5),
+.new-book-page-form>.new-book-page-rating {
   grid-column: span 1;
 }
 
-.new-book-page-form > .new-book-page-description,
-.new-book-page-form > .new-book-page-review,
-.new-book-page-form > .new-book-page-genres,
-.new-book-page-form > .new-book-page-footer {
+.new-book-page-form>.new-book-page-description,
+.new-book-page-form>.new-book-page-review,
+.new-book-page-form>.new-book-page-genres,
+.new-book-page-form>.new-book-page-footer {
   grid-column: span 2;
 }
 
@@ -66,10 +69,18 @@
 .new-book-page-checkbox {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
+  gap: 2px;
   font-weight: 500;
   text-transform: capitalize;
   color: rgba(51, 65, 85, 0.9);
+}
+
+.new-book-page-checkbox input {
+  width: 18px;
+  height: 18px;
+  border-radius: 6px;
+  border: 1px solid rgba(148, 163, 184, 0.6);
+  accent-color: rgb(37, 99, 235);
 }
 
 .new-book-page-alert {
@@ -125,11 +136,11 @@
     grid-template-columns: 1fr;
   }
 
-  .new-book-page-form > .new-book-page-description,
-  .new-book-page-form > .new-book-page-review,
-  .new-book-page-form > .new-book-page-genres,
-  .new-book-page-form > .new-book-page-footer,
-  .new-book-page-form > .new-book-page-preview {
+  .new-book-page-form>.new-book-page-description,
+  .new-book-page-form>.new-book-page-review,
+  .new-book-page-form>.new-book-page-genres,
+  .new-book-page-form>.new-book-page-footer,
+  .new-book-page-form>.new-book-page-preview {
     grid-column: span 1;
   }
 
