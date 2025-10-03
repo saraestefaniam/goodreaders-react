@@ -26,10 +26,14 @@ describe("NewBookPage", () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
+    localStorage.clear();
+    sessionStorage.clear();
   });
 
   it("renderiza y usa géneros fallback cuando getGenres falla", async () => {
     (service.getGenres as Mock).mockRejectedValue(new Error("boom"));
+    localStorage.setItem("auth", "token");
+
     render(
       <MemoryRouter>
         <NewBookPage />
@@ -44,6 +48,8 @@ describe("NewBookPage", () => {
   it("envía el formulario y navega al detalle en caso de éxito", async () => {
     (service.getGenres as Mock).mockResolvedValue(["fantasy", "romance"]);
     (service.createBook as Mock).mockResolvedValue({ id: "abc123" });
+
+    localStorage.setItem("auth", "token");
 
     render(
       <MemoryRouter>

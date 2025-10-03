@@ -3,6 +3,7 @@ import type { ChangeEvent } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { AxiosError } from "axios";
 import Page from "../../components/ui/layout/page";
+import Spinner from "../../components/ui/spinner";
 import ConfirmDialog from "../../components/ui/layout/confirm-dialog";
 import Button from "../../components/ui/button";
 import {
@@ -35,10 +36,10 @@ function BookPage() {
       navigate("/books");
     } catch (error) {
       if (error instanceof AxiosError) {
-        const status = error.response?.status;
-        if (status === 404) {
+        const statusCode = error.response?.status;
+        if (statusCode === 404) {
           navigate("/404");
-        } else if (status === 401) {
+        } else if (statusCode === 401) {
           navigate("/login");
         } else {
           console.error("Unexpected error while deleting:", error);
@@ -178,9 +179,7 @@ function BookPage() {
   return (
     <Page title={book ? book.title : "Book detail"}>
       <div className="book-detail">
-        {status === "loading" && (
-          <div className="book-detail__state">Loading book…</div>
-        )}
+        {status === "loading" && <Spinner label="Loading book…" />}
 
         {status === "error" && (
           <div className="book-detail__state book-detail__state--error">
@@ -198,40 +197,34 @@ function BookPage() {
               />
 
               <div className="book-detail-summary">
-                <p className="book-detail-author">
-                  by <span>{book.author}</span>
-                </p>
+                <div className="book-detail-summary-header">
+                  <p className="book-detail-author">
+                    by <span>{book.author}</span>
+                  </p>
 
-                {book.genre.length > 0 && (
-                  <div className="book-detail-genres">
-                    {book.genre.map((g) => (
-                      <span key={g} className="book-detail-chip">
-                        #{g}
-                      </span>
-                    ))}
-                  </div>
-                )}
-
-                <div
-                  className="book-detail-rating"
-                  aria-label={`Rating: ${ratingLabel}`}
-                  title={`Rating: ${ratingLabel}`}
-                >
-                  <span className="book-detail-rating__stars" aria-hidden="true">
-                    {"★".repeat(book.rating) + "☆".repeat(5 - book.rating)}
-                  </span>
-                  <span className="book-detail-rating__value">{ratingLabel}</span>
-                </div>
-
-                {book.description && (
-                  <p className="book-detail-description">{book.description}</p>
-                )}
-
-                <div className="book-detail-meta">
-                  {createdAt && <span>Added on {createdAt}</span>}
-                  {updatedAt && updatedAt !== createdAt && (
-                    <span>Updated on {updatedAt}</span>
+                  {book.genre.length > 0 && (
+                    <div className="book-detail-genres">
+                      {book.genre.map((g) => (
+                        <span key={g} className="book-detail-chip">
+                          #{g}
+                        </span>
+                      ))}
+                    </div>
                   )}
+
+                  <div
+                    className="book-detail-rating"
+                    aria-label={`Rating: ${ratingLabel}`}
+                    title={`Rating: ${ratingLabel}`}
+                  >
+                    <span
+                      className="book-detail-rating__stars"
+                      aria-hidden="true"
+                    >
+                      {"★".repeat(book.rating) + "☆".repeat(5 - book.rating)}
+                    </span>
+                    <span className="book-detail-rating__value">{ratingLabel}</span>
+                  </div>
                 </div>
               </div>
 
@@ -270,6 +263,19 @@ function BookPage() {
                 )}
               </aside>
             </div>
+
+            <section className="book-detail-description-block">
+              {book.description && (
+                <p className="book-detail-description">{book.description}</p>
+              )}
+
+              <div className="book-detail-meta">
+                {createdAt && <span>Added on {createdAt}</span>}
+                {updatedAt && updatedAt !== createdAt && (
+                  <span>Updated on {updatedAt}</span>
+                )}
+              </div>
+            </section>
 
             <section className="book-detail-review">
               <h3>Review</h3>

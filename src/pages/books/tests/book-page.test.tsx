@@ -13,6 +13,8 @@ vi.mock("../book-item.css", () => ({}));
 vi.mock("../service", () => ({
   getBook: vi.fn(),
   deleteBook: vi.fn(),
+  updateWantToReadStatus: vi.fn(),
+  getWantToReadStatus: vi.fn(),
 }));
 
 const mockNavigate = vi.fn();
@@ -77,6 +79,11 @@ describe("BookPage", () => {
   beforeEach(() => {
     vi.clearAllMocks();
     mockUseParams.mockReturnValue({ bookId: "1" });
+    (service.getWantToReadStatus as Mock).mockResolvedValue({
+      bookId: "1",
+      wantToRead: false,
+    });
+    (service.updateWantToReadStatus as Mock).mockResolvedValue(undefined);
   });
 
   it("renders the book detail when getBook succeeds", async () => {
@@ -91,7 +98,7 @@ describe("BookPage", () => {
     expect(await screen.findByText("The Way of Kings")).toBeInTheDocument();
     expect(screen.getByText("Brandon Sanderson")).toBeInTheDocument();
     expect(screen.getByText("★★★★★")).toBeInTheDocument();
-    expect(screen.getByText("fantasy")).toBeInTheDocument();
+    expect(screen.getByText("#fantasy")).toBeInTheDocument();
   });
 
   it("navigates to /404 when getBook returns 404", async () => {

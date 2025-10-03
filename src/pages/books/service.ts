@@ -1,14 +1,28 @@
 import api from "../../api/client";
-import type { Book, WantToReadStatus } from "./type";
+import type { Book, BooksListResponse, WantToReadStatus } from "./type";
 import type { Genres } from "./genres-type";
 
 const BOOKS_URL = "api/v1/books"; 
 const WANT_TO_READ_URL = "api/v1/users/want-to-read";
 
 // GET lista 
-export const getBooks = async () => {
-  const response = await api.get<Book[]>(BOOKS_URL);
-  return response.data;
+export const getBooks = async (): Promise<Book[]> => {
+  const { data } = await api.get<Book[] | BooksListResponse>(BOOKS_URL);
+
+  if (Array.isArray(data)) {
+    return data;
+  }
+
+  if (
+    data &&
+    typeof data === "object" &&
+    "items" in data &&
+    Array.isArray((data as BooksListResponse).items)
+  ) {
+    return (data as BooksListResponse).items;
+  }
+
+  return [];
 };
 
 // GET detalle
