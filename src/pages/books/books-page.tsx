@@ -58,14 +58,14 @@ function BooksPage() {
     setErrorMessage(null);
     (async () => {
       try {
-        const res: BooksListResponse = await getBooksWithPagination(page, ITEMS_PER_PAGE);
-        let items = res.items;
-        if (filterGenres.length) {
-          items = items.filter((book) =>
-            filterGenres.some((g) => book.genre.includes(g))
-          );
-        }
-        setBooks(items);
+        const genres = filterGenres.length ? filterGenres : undefined;
+        const res: BooksListResponse = await getBooksWithPagination(
+          page,
+          ITEMS_PER_PAGE,
+          genres,
+        );
+        if (!mounted) return;
+        setBooks(res.items);
         setTotalPages(res.pages);
       } catch (error) {
         if (!mounted) return;
@@ -141,7 +141,11 @@ function BooksPage() {
             <span>
               Page {page} of {totalPages}
             </span>
-            <Button variant="primary" onClick={nextPage} disabled={page === totalPages}>
+            <Button
+              variant="primary"
+              onClick={nextPage}
+              disabled={page === totalPages}
+            >
               Next
             </Button>
           </div>
@@ -154,4 +158,3 @@ function BooksPage() {
 }
 
 export default BooksPage;
-
