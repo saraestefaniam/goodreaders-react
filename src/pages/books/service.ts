@@ -5,24 +5,13 @@ import type { Genres } from "./genres-type";
 const BOOKS_URL = "api/v1/books"; 
 const WANT_TO_READ_URL = "api/v1/users/want-to-read";
 
-// GET lista 
-export const getBooks = async (): Promise<Book[]> => {
-  const { data } = await api.get<Book[] | BooksListResponse>(BOOKS_URL);
-
-  if (Array.isArray(data)) {
-    return data;
-  }
-
-  if (
-    data &&
-    typeof data === "object" &&
-    "items" in data &&
-    Array.isArray((data as BooksListResponse).items)
-  ) {
-    return (data as BooksListResponse).items;
-  }
-
-  return [];
+// GET lista paginada
+export const getBooksWithPagination = async (
+  page: number, 
+  limit: number
+): Promise<BooksListResponse> => {
+  const { data } = await api.get<BooksListResponse>(`${BOOKS_URL}?page=${page}&limit=${limit}`);
+  return data;
 };
 
 // GET detalle
