@@ -31,7 +31,6 @@ function BooksPage() {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
-  const [totalItems, setTotalItems] = useState(0);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -68,7 +67,6 @@ function BooksPage() {
         }
         setBooks(items);
         setTotalPages(res.pages);
-        setTotalItems(res.total);
       } catch (error) {
         if (!mounted) return;
         setBooks([]);
@@ -141,7 +139,7 @@ function BooksPage() {
               Previous
             </Button>
             <span>
-              Page {page} of {totalPages} ({totalItems} books)
+              Page {page} of {totalPages}
             </span>
             <Button variant="primary" onClick={nextPage} disabled={page === totalPages}>
               Next
