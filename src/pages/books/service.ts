@@ -73,3 +73,9 @@ export const getGenres = async (): Promise<Genres[]> => {
   return data;
 };
  
+// SEARCH
+export async function searchBooks(query: string) {
+  const res = await fetch(`${BOOKS_URL}/search?q=${encodeURIComponent(query)}`);
+  if (!res.ok) throw new Error("Error buscando libros");
+  return res.json();
+}
