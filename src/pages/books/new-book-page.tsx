@@ -93,14 +93,13 @@ function NewBookPage() {
   return (
     <Page title="Add a new book">
       <div className="new-book-page-wrapper">
-        <div style={{ width: "100%" }}>
-          {errorMsg && (
-            <div role="alert" className="new-book-page-alert">
-              {errorMsg}
-            </div>
-          )}
+        {errorMsg && (
+          <div role="alert" className="new-book-page-alert">
+            {errorMsg}
+          </div>
+        )}
 
-          <form onSubmit={handleSubmit} className="new-book-page-form">
+        <form onSubmit={handleSubmit} className="new-book-page-form">
             <FormField
               label="Title *"
               name="title"
@@ -209,7 +208,6 @@ function NewBookPage() {
               </Button>
             </div>
           </form>
-        </div>
       </div>
     </Page>
   );
