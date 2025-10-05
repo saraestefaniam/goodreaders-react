@@ -1,8 +1,9 @@
 .filter-form {
   display: flex;
   flex-wrap: wrap;
-  gap: 12px;
+  gap: 2rem;
   align-items: center;
+  position: relative;
   padding: 12px 16px;
   margin-bottom: 20px;
   background: rgba(var(--card-bg), 0.92);

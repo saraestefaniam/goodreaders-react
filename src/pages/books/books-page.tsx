@@ -184,15 +184,7 @@ function BooksPage() {
           {errorMessage}
         </div>
       )}
-      <div
-        className="filter-form"
-        style={{
-          display: "flex",
-          gap: "2rem",
-          alignItems: "center",
-          position: "relative",
-        }}
-      >
+      <div className="filter-form">
         <div className="filter-tags">
           Genres:
           {availableGenres.map((genre) => (
