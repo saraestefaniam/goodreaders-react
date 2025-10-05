@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react";
-import { getBooksWithPagination, getGenres } from "./service";
+import { useState, useEffect, useRef } from "react";
+import { getBooksWithPagination, getGenres, searchBooks } from "./service";
 import type { Book, BooksListResponse } from "./type";
 import type { Genres } from "./genres-type";
 import { FALLBACK_GENRES } from "./genres.constants";
@@ -11,6 +11,7 @@ import Spinner from "../../components/ui/spinner";
 import storage from "../../utils/storage";
 import "../../index.css";
 import "./books-pages.css";
+import "../../components/ui/search-bar.css";
 
 const ITEMS_PER_PAGE = 8;
 
@@ -29,8 +30,15 @@ function BooksPage() {
   const [filterGenres, setFilterGenres] = useState<Genres[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [results, setResults] = useState<Book[]>([]);
+  const [query, setQuery] = useState("");
+  const [showDropdown, setShowDropdown] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+  const latestQueryRef = useRef("");
+
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -52,6 +60,78 @@ function BooksPage() {
     };
   }, []);
 
+  // Close the dropdown when clicking outside of it
+  useEffect(() => {
+    if (!showDropdown) return;
+
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
+        setShowDropdown(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [showDropdown]);
+
+  const handleInputChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setQuery(value);
+    latestQueryRef.current = value;
+    if (!value.trim() || value.length < 3) {
+      setResults([]);
+      setShowDropdown(false);
+      return;
+    }
+    try {
+      const books = await searchBooks(value);
+      if (latestQueryRef.current !== value) return;
+      setResults(books);
+      setShowDropdown(books.length > 0);
+    } catch {
+      setResults([]);
+      setShowDropdown(false);
+    }
+  };
+
+  const handleSearch = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!query.trim()) {
+      setResults([]);
+      setShowDropdown(false);
+      return;
+    }
+    try {
+      latestQueryRef.current = query;
+      const books = await searchBooks(query);
+      if (latestQueryRef.current !== query) return;
+      setResults(books);
+      setShowDropdown(true);
+    } catch {
+      setResults([]);
+      setShowDropdown(false);
+    }
+  };
+
+  const handleResultClick = (bookId: string) => {
+    setShowDropdown(false);
+    setQuery("");
+    setResults([]);
+    latestQueryRef.current = "";
+    navigate(`/books/${bookId}`);
+  };
+
+  const filteredBooks = books.filter((book) =>
+    filterGenres.length
+      ? filterGenres.some((g) => book.genre.includes(g))
+      : true,
+  );
+
   useEffect(() => {
     let mounted = true;
     setIsLoading(true);
@@ -67,7 +147,7 @@ function BooksPage() {
         if (!mounted) return;
         setBooks(res.items);
         setTotalPages(res.pages);
-      } catch (error) {
+      } catch {
         if (!mounted) return;
         setBooks([]);
         setErrorMessage("We couldn't load the books list.");
@@ -104,7 +184,7 @@ function BooksPage() {
           {errorMessage}
         </div>
       )}
-      <form className="filter-form">
+      <div className="filter-form">
         <div className="filter-tags">
           Genres:
           {availableGenres.map((genre) => (
@@ -124,11 +204,42 @@ function BooksPage() {
             </label>
           ))}
         </div>
-      </form>
-      {books.length ? (
+        <div
+          className="header-search"
+          ref={dropdownRef}
+          style={{ position: "relative" }}
+        >
+          <form onSubmit={handleSearch} autoComplete="off">
+            <input
+              type="text"
+              className="search-input"
+              placeholder="Search books or authors"
+              value={query}
+              onChange={handleInputChange}
+              onFocus={() => results.length > 0 && setShowDropdown(true)}
+            />
+          </form>
+          {showDropdown && results.length > 0 && (
+            <ul className="search-dropdown">
+              {results.map((book) => (
+                <li
+                  key={book.id}
+                  className="search-result"
+                  onClick={() => handleResultClick(book.id)}
+                  onMouseDown={(e) => e.preventDefault()}
+                >
+                  <strong>{book.title}</strong>
+                  <span className="search-result-author">{book.author}</span>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+      </div>
+      {filteredBooks.length ? (
         <div>
           <div className="book-list">
-            {books.map((book) => (
+            {filteredBooks.map((book) => (
               <Link to={`/books/${book.id}`} key={book.id}>
                 <BookItem book={book} />
               </Link>

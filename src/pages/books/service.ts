@@ -66,3 +66,11 @@ export const getGenres = async (): Promise<Genres[]> => {
   const { data } = await api.get<Genres[]>(`${BOOKS_URL}/genres`);
   return data;
 };
+
+// SEARCH libros por título o autor
+export const searchBooks = async (query: string): Promise<Book[]> => {
+  const { data } = await api.get<Book[]>(`${BOOKS_URL}/search`, {
+    params: { q: query },
+  });
+  return data;
+};
