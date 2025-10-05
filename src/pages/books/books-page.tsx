@@ -13,7 +13,7 @@ import "../../index.css";
 import "./books-pages.css";
 import "../../components/ui/search-bar.css";
 
-const ITEMS_PER_PAGE = 8;
+const ITEMS_PER_PAGE = 12;
 
 const EmptyList = ({ onAdd }: { onAdd: () => void }) => (
   <div>

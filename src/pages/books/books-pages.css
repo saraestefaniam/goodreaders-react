@@ -32,10 +32,7 @@
   --book-card-width: 280px;
   --book-card-height: 420px;
   display: grid;
-  grid-template-columns: repeat(
-    auto-fill,
-    minmax(var(--book-card-width), var(--book-card-width))
-  );
+  grid-template-columns: repeat(4, var(--book-card-width));
   grid-auto-rows: var(--book-card-height);
   justify-content: center;
   align-items: stretch;
