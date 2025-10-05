@@ -1,20 +1,73 @@
-/* src/components/ui/layout/footer.css */
 .footer {
-  height: 64px;
-  padding: 0 15px;
+  margin-top: auto;
+  border-top: 1px solid rgb(var(--border));
+  background: rgba(var(--chrome-bg), 0.96);
+}
+
+.footer-content {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 28px 24px;
   display: flex;
   align-items: center;
-  justify-content: center;
-  border-top: 1px solid rgb(var(--color-border));
-  color: rgb(var(--color-primary-text));
-  background-color: rgb(var(--color-bg));
+  justify-content: space-between;
+  gap: 24px;
+  flex-wrap: wrap;
 }
 
-.footer a {
-  color: rgb(var(--color-primary-text));
+.footer-brand {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.footer-brand-title {
+  font-family: "Georgia", serif;
+  font-size: 18px;
+  font-weight: 700;
+  color: rgb(var(--text-primary));
+}
+
+.footer-brand-subtitle {
+  font-size: 13px;
+  color: rgb(var(--text-muted));
+}
+
+.footer-contact {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  font-size: 14px;
+  color: rgb(var(--text-muted));
+}
+
+.footer-contact a {
+  color: rgb(var(--accent));
+  font-weight: 600;
   text-decoration: none;
+  transition: color 0.2s ease;
 }
 
-.footer a:hover {
-  text-decoration: underline;
+.footer-contact a:hover,
+.footer-contact a:focus-visible {
+  color: rgb(var(--text-primary));
+  outline: none;
+}
+
+.footer-copy {
+  margin: 0;
+  font-size: 13px;
+  color: rgb(var(--text-muted));
+}
+
+@media (max-width: 768px) {
+  .footer-content {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .footer-copy {
+    order: 2;
+  }
 }

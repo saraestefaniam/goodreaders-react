@@ -1,23 +1,16 @@
 // src/pages/books/new-book-page.tsx
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { createBook, getGenres } from "./service";
+import type { Genres } from "./genres-type";
+import { FALLBACK_GENRES } from "./genres.constants";
+import { AxiosError } from "axios";
+import "./new-book-page.css";
 import Page from "../../components/ui/layout/page";
 import Button from "../../components/ui/button";
 import FormField from "../../components/ui/form-field";
-import { createBook, getGenres } from "./service";
-import type { Genres } from "./genres-type";
-import { AxiosError } from "axios";
-import "./new-book-page.css";
-
-const FALLBACK_GENRES: Genres[] = [
-  "fantasy",
-  "science-fiction",
-  "romance",
-  "thriller",
-  "non-fiction",
-  "mystery",
-  "other",
-];
+import Spinner from "../../components/ui/spinner";
+import storage from "../../utils/storage";
 
 function NewBookPage() {
   const navigate = useNavigate();
@@ -34,10 +27,18 @@ function NewBookPage() {
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
   useEffect(() => {
+    const token = storage.get("auth");
+    if (!token) {
+      navigate("/login", { replace: true, state: { from: "/books/new" } });
+      return;
+    }
+
     getGenres()
-      .then((gs) => setAvailableGenres(gs))
+      .then((gs) =>
+        setAvailableGenres(Array.from(new Set([...gs, ...FALLBACK_GENRES]))),
+      )
       .catch(() => setAvailableGenres(FALLBACK_GENRES));
-  }, []);
+  }, [navigate]);
 
   const isFormValid =
     title.trim() &&
@@ -91,118 +92,123 @@ function NewBookPage() {
 
   return (
     <Page title="Add a new book">
-      {errorMsg && (
-        <div role="alert" className="new-book-page-alert">
-          {errorMsg}
-        </div>
-      )}
-
-      <form onSubmit={handleSubmit} className="new-book-page-form">
-        <FormField
-          label="Title *"
-          type="text"
-          name="title"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          placeholder="The Way of Kings"
-          required
-          className="new-book-page-input"
-        />
-
-        <FormField
-          label="Author *"
-          type="text"
-          name="author"
-          value={author}
-          onChange={(e) => setAuthor(e.target.value)}
-          placeholder="Brandon Sanderson"
-          required
-          className="new-book-page-input"
-        />
-
-        <label className="new-book-page-label">
-          Description
-          <textarea
-            className="new-book-page-textarea"
-            rows={4}
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            placeholder="Short synopsis or personal notes..."
-          />
-        </label>
-
-        <label className="new-book-page-label">
-          Review *
-          <textarea
-            className="new-book-page-textarea"
-            rows={4}
-            value={review}
-            onChange={(e) => setReview(e.target.value)}
-            placeholder="What did you think of the book?"
-            required
-          />
-        </label>
-
-        <FormField
-          label="Cover (URL)"
-          type="url"
-          name="cover"
-          value={cover}
-          onChange={(e) => setCover(e.target.value)}
-          placeholder="https://images.example.com/my-cover.jpg"
-          className="new-book-page-input"
-        />
-
-        <fieldset className="new-book-page-fieldset">
-          <legend className="new-book-page-legend">Genres *</legend>
-          <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
-            {availableGenres.map((g) => (
-              <label key={g} className="new-book-page-checkbox">
-                <input
-                  type="checkbox"
-                  checked={genres.includes(g)}
-                  onChange={() => handleToggleGenre(g)}
-                />
-                <span>#{g}</span>
-              </label>
-            ))}
+      <div className="new-book-page-wrapper">
+        {errorMsg && (
+          <div role="alert" className="new-book-page-alert">
+            {errorMsg}
           </div>
-        </fieldset>
+        )}
 
-        <label className="new-book-page-label">
-          Rating (1-5) *
-          <select
-            className="new-book-page-select"
-            value={rating}
-            onChange={(e) => setRating(Number(e.target.value))}
-            required
-          >
-            {[1, 2, 3, 4, 5].map((n) => (
-              <option key={n} value={n}>
-                {n}
-              </option>
-            ))}
-          </select>
-        </label>
+        <form onSubmit={handleSubmit} className="new-book-page-form">
+            <FormField
+              label="Title *"
+              name="title"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              placeholder="The Way of Kings"
+              required
+            />
 
-        <div className="new-book-page-footer">
-          <Button
-            type="submit"
-            variant="primary"
-            disabled={!isFormValid || submitting}
-            className="new-book-page-submit"
-          >
-            {submitting ? "Creating..." : "Create book"}
-          </Button>
-          <Button
-            type="button"
-            variant="secondary"
-            onClick={() => navigate("/books")}
-          >
-            Cancel
-          </Button>
-        </div>
-      </form>
+            <FormField
+              label="Author *"
+              name="author"
+              value={author}
+              onChange={(e) => setAuthor(e.target.value)}
+              placeholder="Brandon Sanderson"
+              required
+            />
+
+            <label className="form-field new-book-page-description">
+              <span className="form-field__label">Description</span>
+              <textarea
+                className="form-field__input"
+                rows={4}
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                placeholder="Short synopsis or personal notes..."
+              />
+            </label>
+
+            <label className="form-field new-book-page-review">
+              <span className="form-field__label">Review *</span>
+              <textarea
+                className="form-field__input"
+                rows={4}
+                value={review}
+                onChange={(e) => setReview(e.target.value)}
+                placeholder="What did you think of the book?"
+                required
+              />
+            </label>
+
+            <FormField
+              label="Cover (URL)"
+              name="cover"
+              type="url"
+              value={cover}
+              onChange={(e) => setCover(e.target.value)}
+              placeholder="https://images.example.com/my-cover.jpg"
+            />
+
+            <label className="form-field new-book-page-rating">
+              <span className="form-field__label">Rating (1-5) *</span>
+              <select
+                className="form-field__input"
+                value={rating}
+                onChange={(e) => setRating(Number(e.target.value))}
+                required
+              >
+                {[1, 2, 3, 4, 5].map((n) => (
+                  <option key={n} value={n}>
+                    {n}
+                  </option>
+                ))}
+              </select>
+            </label>
+
+            <fieldset className="new-book-page-genres">
+              <legend>Genres *</legend>
+              {availableGenres.length === 0 ? (
+                <Spinner label="Loading genres…" />
+              ) : (
+                <div className="new-book-page-genres-grid">
+                  {availableGenres.map((g) => (
+                    <label key={g} className="new-book-page-checkbox">
+                      <input
+                        type="checkbox"
+                        checked={genres.includes(g)}
+                        onChange={() => handleToggleGenre(g)}
+                      />
+                      <span>#{g}</span>
+                    </label>
+                  ))}
+                </div>
+              )}
+            </fieldset>
+
+            <div className="new-book-page-footer">
+              <Button
+                type="button"
+                variant="secondary"
+                onClick={() => navigate("/books")}
+              >
+                Cancel
+              </Button>
+              <Button
+                type="submit"
+                variant="primary"
+                disabled={!isFormValid || submitting}
+                className="new-book-page-submit"
+              >
+                {submitting ? (
+                  <Spinner inline size="sm" label="Creating…" />
+                ) : (
+                  "Create book"
+                )}
+              </Button>
+            </div>
+          </form>
+      </div>
     </Page>
   );
 }

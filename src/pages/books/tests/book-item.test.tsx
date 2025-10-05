@@ -29,10 +29,12 @@ describe("BookItem", () => {
 
     // Imagen con alt = título
     const img = screen.getByRole("img", {
-      name: book.title,
-    }) as HTMLImageElement;
+      name: `Cover art for ${book.title}`,
+    }) as HTMLDivElement;
     expect(img).toBeInTheDocument();
-    expect(img.src).toContain("https://example.com/cover.jpg");
+    expect(img.style.backgroundImage).toContain(
+      "https://example.com/cover.jpg",
+    );
 
     // Título y autor
     expect(screen.getByText(book.title)).toBeInTheDocument();
@@ -41,7 +43,6 @@ describe("BookItem", () => {
     // Rating (ARIA + title + estrellas)
     const ratingEl = screen.getByLabelText("Rating: 3 out of 5");
     expect(ratingEl).toBeInTheDocument();
-    expect(screen.getByTitle("3/5")).toBeInTheDocument();
     expect(ratingEl).toHaveTextContent("★★★☆☆");
 
     // Géneros con prefijo #
@@ -55,8 +56,8 @@ describe("BookItem", () => {
     render(<BookItem book={book} />);
 
     const img = screen.getByRole("img", {
-      name: book.title,
-    }) as HTMLImageElement;
-    expect(img.src).toContain("picsum.photos/id/24/400/400");
+      name: `Cover art for ${book.title}`,
+    }) as HTMLDivElement;
+    expect(img.style.backgroundImage).toContain("picsum.photos/id/24/400/400");
   });
 });

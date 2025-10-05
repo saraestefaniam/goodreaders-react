@@ -1,10 +1,12 @@
 import FormField from "../../components/ui/form-field";
 import Button from "../../components/ui/button";
+import Spinner from "../../components/ui/spinner";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import { useState } from "react";
 import { createUser } from "../../store/thunks/authThunks";
 import Page from "../../components/ui/layout/page";
 import "./auth.css";
+import { useNavigate } from "react-router-dom";
 
 const CreateUserPage = () => {
   const dispatch = useAppDispatch();
@@ -17,8 +19,13 @@ const CreateUserPage = () => {
     passwordAgain: "",
   });
 
+  const navigate = useNavigate();
+
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
   const [passwordError, setPasswordError] = useState<string | null>(null);
+  const [successfulMessage, setSuccessfulMessage] = useState<string | null>(
+    null,
+  );
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, files } = event.target;
@@ -45,26 +52,28 @@ const CreateUserPage = () => {
     event.preventDefault();
     if (!passwordValidator()) return;
 
-    let avatarBase64 = undefined;
-
+    const formData = new FormData();
+    formData.append("name", form.name);
+    formData.append("email", form.email);
+    formData.append("password", form.password);
     if (avatarFile) {
-      const reader = new FileReader();
-      const filePromise = new Promise<string>((resolve, reject) => {
-        reader.onloadend = () => {
-          resolve(reader.result as string);
-        };
-        reader.onerror = reject;
-      });
-      reader.readAsDataURL(avatarFile);
-      avatarBase64 = await filePromise;
+      formData.append("avatar", avatarFile);
     }
-    const formData = {
-      name: form.name,
-      email: form.email,
-      password: form.password,
-      avatar: avatarBase64,
-    };
-    dispatch(createUser(formData));
+
+    try {
+      const resultAction = await dispatch(createUser(formData));
+
+      if (createUser.fulfilled.match(resultAction)) {
+        setSuccessfulMessage(
+          "User created successfully, redirecting to login...",
+        );
+        setTimeout(() => {
+          navigate("/login");
+        }, 3000);
+      }
+    } catch (err: any) {
+      err.message || "Unexpected error ocurred";
+    }
   };
 
   return (
@@ -75,96 +84,85 @@ const CreateUserPage = () => {
 
           {error && <div className="auth-alert">{error}</div>}
           {passwordError && <div className="auth-alert">{passwordError}</div>}
+          {successfulMessage && (
+            <div className="auth-alert success">{successfulMessage}</div>
+          )}
 
           <form className="auth-form" onSubmit={handleSubmit}>
-            <div>
-              <label htmlFor="name" className="auth-label">
-                Username
-              </label>
-              <FormField
-                label="Username"
-                id="name"
-                name="name"
-                type="text"
-                value={form.name}
-                onChange={handleChange}
-                placeholder="Your username"
-                required
-              />
-            </div>
+            <FormField
+              label="Username"
+              id="name"
+              name="name"
+              type="text"
+              value={form.name}
+              onChange={handleChange}
+              placeholder="Your username"
+              required
+            />
 
-            <div>
-              <label htmlFor="email" className="auth-label">
-                Email
-              </label>
-              <FormField
-                label="Email"
-                id="email"
-                name="email"
-                type="email"
-                value={form.email}
-                onChange={handleChange}
-                placeholder="you@example.com"
-                required
-              />
-            </div>
+            <FormField
+              label="Email"
+              id="email"
+              name="email"
+              type="email"
+              value={form.email}
+              onChange={handleChange}
+              placeholder="you@example.com"
+              required
+            />
 
-            <div>
-              <label htmlFor="password" className="auth-label">
-                Password
-              </label>
-              <FormField
-                label="Password"
-                id="password"
-                name="password"
-                type="password"
-                value={form.password}
-                onChange={handleChange}
-                placeholder="••••••••"
-                required
-                minLength={6}
-              />
-            </div>
+            <FormField
+              label="Password"
+              id="password"
+              name="password"
+              type="password"
+              value={form.password}
+              onChange={handleChange}
+              placeholder="••••••••"
+              required
+              minLength={6}
+            />
 
-            <div>
-              <label htmlFor="passwordAgain" className="auth-label">
-                Repeat password
-              </label>
-              <FormField
-                label="Repeat password"
-                id="passwordAgain"
-                name="passwordAgain"
-                type="password"
-                value={form.passwordAgain}
-                onChange={handleChange}
-                placeholder="••••••••"
-                required
-                minLength={6}
-              />
-            </div>
+            <FormField
+              label="Repeat password"
+              id="passwordAgain"
+              name="passwordAgain"
+              type="password"
+              value={form.passwordAgain}
+              onChange={handleChange}
+              placeholder="••••••••"
+              required
+              minLength={6}
+            />
 
-            <div>
-              <label htmlFor="avatar" className="auth-label">
-                Avatar (optional)
-              </label>
+            <label className="form-field">
+              <span className="form-field__label">Avatar (optional)</span>
               <input
+                className="form-field__input"
                 id="avatar"
                 name="avatar"
                 type="file"
                 accept="image/*"
                 onChange={handleChange}
-                className="auth-input"
               />
-            </div>
+            </label>
 
             <div className="auth-actions">
+              <span className="auth-alt-action">
+                Already registered? <a href="/login">Sign in</a>
+              </span>
+
               <Button
                 type="submit"
                 variant="primary"
                 disabled={loading}
                 className="auth-submit"
               >
-                {loading ? "Creating user..." : "Create user"}
+                {loading ? (
+                  <Spinner inline size="sm" label="Creating user…" />
+                ) : (
+                  "Create user"
+                )}
               </Button>
             </div>
           </form>

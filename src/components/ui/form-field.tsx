@@ -1,19 +1,27 @@
 import type { ComponentProps } from "react";
-import "../../index.css"
+import "./form-field.css";
 
-interface FormProps extends ComponentProps<"input"> {
-    label: string;
+interface FormFieldProps extends ComponentProps<"input"> {
+  label: string;
+  helperText?: string;
+  wrapperClassName?: string;
+  inputClassName?: string;
 }
 
-const FormField = ({ label, ...props }: FormProps) => {
-    return (
-        <div className="flex flex-col">
-            <label className="mb-1 text-sm font-medium text-gray-700">
-                <span>{label}</span>
-                <input className="rounded-md border border-gray-300 px-3 py-2 focus:border-[var(--color-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--color-primary)]" autoComplete="off" {...props} />
-            </label>
-        </div>
-    )
+function FormField({
+  label,
+  helperText,
+  wrapperClassName = "",
+  inputClassName = "",
+  ...props
+}: FormFieldProps) {
+  return (
+    <label className={`form-field ${wrapperClassName}`}>
+      <span className="form-field__label">{label}</span>
+      <input className={`form-field__input ${inputClassName}`.trim()} {...props} />
+      {helperText && <span className="form-field__helper">{helperText}</span>}
+    </label>
+  );
 }
 
 export default FormField;
