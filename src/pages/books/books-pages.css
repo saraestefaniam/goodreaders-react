@@ -52,6 +52,13 @@
     0 12px 24px rgba(15, 23, 42, 0.12);
 }
 
+.pagination-controls {
+  display: flex;
+  justify-content: center; 
+  align-items: center;
+  gap: 1rem; 
+  margin-top: 1rem;
+}
 
 @media (min-width: 480px) {
   .book-list {

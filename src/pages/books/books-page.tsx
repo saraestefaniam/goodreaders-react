@@ -1,6 +1,8 @@
+
 import { useState, useEffect, useRef } from "react";
-import { getBooks, getGenres, searchBooks } from "./service";
-import type { Book } from "./type";
+import { getBooksWithPagination, getGenres, searchBooks } from "./service";
+import type { Book, BooksListResponse } from "./type";
+
 import type { Genres } from "./genres-type";
 import { FALLBACK_GENRES } from "./genres.constants";
 import Page from "../../components/ui/layout/page";
@@ -12,6 +14,8 @@ import storage from "../../utils/storage";
 import "../../index.css";
 import "./books-pages.css";
 import "../../components/ui/search-bar.css"
+
+const ITEMS_PER_PAGE = 8;
 
 const EmptyList = ({ onAdd }: { onAdd: () => void }) => (
   <div>
@@ -28,55 +32,31 @@ function BooksPage() {
   const [filterGenres, setFilterGenres] = useState<Genres[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
   const [results, setResults] = useState<Book[]>([]);
   const [query, setQuery] = useState("");
   const [showDropdown, setShowDropdown] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+
   const navigate = useNavigate();
 
   useEffect(() => {
     let mounted = true;
-
-    setIsLoading(true);
     setErrorMessage(null);
-
     (async () => {
-      const [booksRes, genresRes] = await Promise.allSettled([
-        getBooks(),
-        getGenres(),
-      ]);
-
+      const [genresRes] = await Promise.allSettled([getGenres()]);
       if (!mounted) return;
-
-      if (booksRes.status === "fulfilled") {
-        if (Array.isArray(booksRes.value)) {
-          setBooks(booksRes.value);
-        } else {
-          console.error(
-            "Books response was not an array as expected:",
-            booksRes.value,
-          );
-          setBooks([]);
-          setErrorMessage("We couldn't load the books list.");
-        }
-      } else {
-        console.error("Failed to load books:", booksRes.reason);
-        setBooks([]);
-        setErrorMessage("We couldn't load the books list.");
-      }
-
       if (genresRes.status === "fulfilled") {
         setAvailableGenres(
           Array.from(new Set([...genresRes.value, ...FALLBACK_GENRES])),
         );
       } else {
-        console.error("Failed to load genres:", genresRes.reason);
         setAvailableGenres(FALLBACK_GENRES);
       }
-
-      setIsLoading(false);
     })();
-
     return () => {
       mounted = false;
     };
@@ -149,6 +129,33 @@ function BooksPage() {
       ? filterGenres.some((g) => book.genre.includes(g))
       : true,
   );
+  useEffect(() => {
+    let mounted = true;
+    setIsLoading(true);
+    setErrorMessage(null);
+    (async () => {
+      try {
+        const genres = filterGenres.length ? filterGenres : undefined;
+        const res: BooksListResponse = await getBooksWithPagination(
+          page,
+          ITEMS_PER_PAGE,
+          genres,
+        );
+        if (!mounted) return;
+        setBooks(res.items);
+        setTotalPages(res.pages);
+      } catch (error) {
+        if (!mounted) return;
+        setBooks([]);
+        setErrorMessage("We couldn't load the books list.");
+      } finally {
+        if (mounted) setIsLoading(false);
+      }
+    })();
+    return () => {
+      mounted = false;
+    };
+  }, [page, filterGenres]);
 
   const handleAddBook = () => {
     const token = storage.get("auth");
@@ -159,10 +166,16 @@ function BooksPage() {
     navigate("/books/new");
   };
 
+  const prevPage = () => {
+    if (page > 1) setPage((p) => p - 1);
+  };
+  const nextPage = () => {
+    if (page < totalPages) setPage((p) => p + 1);
+  };
+
   return (
     <Page title="Books">
       {isLoading && <Spinner label="Loading books…" />}
-
       {!isLoading && errorMessage && (
         <div className="books-page-alert" role="alert">
           {errorMessage}
@@ -170,6 +183,7 @@ function BooksPage() {
       )}
 
       <form className="filter-form" style={{ display: "flex", gap: "2rem", alignItems: "center", position: "relative" }}>
+
         <div className="filter-tags">
           Genres:
           {availableGenres.map((genre) => (
@@ -217,14 +231,30 @@ function BooksPage() {
           )}
         </div>
       </form>
-
-      {filteredBooks.length ? (
-        <div className="book-list">
-          {filteredBooks.map((book) => (
-            <Link to={`/books/${book.id}`} key={book.id}>
-              <BookItem book={book} />
-            </Link>
-          ))}
+      {books.length ? (
+        <div>
+          <div className="book-list">
+            {books.map((book) => (
+              <Link to={`/books/${book.id}`} key={book.id}>
+                <BookItem book={book} />
+              </Link>
+            ))}
+          </div>
+          <div className="pagination-controls">
+            <Button variant="primary" onClick={prevPage} disabled={page === 1}>
+              Previous
+            </Button>
+            <span>
+              Page {page} of {totalPages}
+            </span>
+            <Button
+              variant="primary"
+              onClick={nextPage}
+              disabled={page === totalPages}
+            >
+              Next
+            </Button>
+          </div>
         </div>
       ) : (
         <EmptyList onAdd={handleAddBook} />
