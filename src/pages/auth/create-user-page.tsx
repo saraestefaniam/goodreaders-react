@@ -52,25 +52,13 @@ const CreateUserPage = () => {
     event.preventDefault();
     if (!passwordValidator()) return;
 
-    let avatarBase64 = undefined;
-
+    const formData = new FormData();
+    formData.append("name", form.name);
+    formData.append("email", form.email);
+    formData.append("password", form.password);
     if (avatarFile) {
-      const reader = new FileReader();
-      const filePromise = new Promise<string>((resolve, reject) => {
-        reader.onloadend = () => {
-          resolve(reader.result as string);
-        };
-        reader.onerror = reject;
-      });
-      reader.readAsDataURL(avatarFile);
-      avatarBase64 = await filePromise;
+      formData.append("avatar", avatarFile);
     }
-    const formData = {
-      name: form.name,
-      email: form.email,
-      password: form.password,
-      avatar: avatarBase64,
-    };
 
     try {
       const resultAction = await dispatch(createUser(formData));

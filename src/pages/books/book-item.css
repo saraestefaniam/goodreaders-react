@@ -1,6 +1,9 @@
 .book-item {
   display: flex;
   flex-direction: column;
+  width: var(--book-card-width, 280px);
+  min-width: var(--book-card-width, 280px);
+  max-width: var(--book-card-width, 280px);
   height: var(--book-card-height, 360px);
   min-height: var(--book-card-height, 360px);
   max-height: var(--book-card-height, 360px);

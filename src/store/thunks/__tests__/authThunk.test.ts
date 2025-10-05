@@ -54,12 +54,27 @@ describe("createUser thunk", () => {
       },
     });
 
-    const dispatch = vi.fn()
-    const thunk = createUser({ name: "Juan", email: "juan@example.com", password: "1234"})
-    const result = await thunk(dispatch, () => ({}), undefined)
-    
-    expect(result.type).toBe("auth/createUser/fulfilled")
-    expect(result.payload).toEqual({user: {name: "Juan", email: "juan@example.com", password: "1234"}})
+    const dispatch = vi.fn();
+    const thunk = createUser({
+      name: "Juan",
+      email: "juan@example.com",
+      password: "1234",
+    });
+    const result = await thunk(dispatch, () => ({}), undefined);
+
+    expect(api.post).toHaveBeenCalledWith(
+      "/api/v1/users",
+      expect.any(FormData),
+    );
+    const sentFormData = (api.post as any).mock.calls[0][1] as FormData;
+    expect(sentFormData.get("name")).toBe("Juan");
+    expect(sentFormData.get("email")).toBe("juan@example.com");
+    expect(sentFormData.get("password")).toBe("1234");
+
+    expect(result.type).toBe("auth/createUser/fulfilled");
+    expect(result.payload).toEqual({
+      user: { name: "Juan", email: "juan@example.com", password: "1234" },
+    });
   });
 
   it("should return error message when createuser fails", async () => {

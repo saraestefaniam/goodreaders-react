@@ -1,4 +1,5 @@
 import "./book-item.css";
+import coverPlaceholder from "../../assets/cover_book_placeholder.jpg";
 import type { Book } from "./type";
 
 interface BookItemProps {
@@ -7,7 +8,7 @@ interface BookItemProps {
 
 const BookItem = ({ book }: BookItemProps) => {
   const { title, author, genre, cover, rating } = book;
-  const coverUrl = cover ?? "https://picsum.photos/id/24/400/400";
+  const coverUrl = cover ?? coverPlaceholder;
   const genreList = genre.length ? genre : ["other"];
   const primaryGenre = genreList[0];
   const additionalGenres = genreList.slice(1);

@@ -13,7 +13,7 @@ import "../../index.css";
 import "./books-pages.css";
 import "../../components/ui/search-bar.css";
 
-const ITEMS_PER_PAGE = 8;
+const ITEMS_PER_PAGE = 12;
 
 const EmptyList = ({ onAdd }: { onAdd: () => void }) => (
   <div>
@@ -89,10 +89,10 @@ function BooksPage() {
       return;
     }
     try {
-      const books = await searchBooks(value);
+      const res = await searchBooks(value);
       if (latestQueryRef.current !== value) return;
-      setResults(books);
-      setShowDropdown(books.length > 0);
+      setResults(res.items);
+      setShowDropdown(res.items.length > 0);
     } catch {
       setResults([]);
       setShowDropdown(false);
@@ -108,10 +108,10 @@ function BooksPage() {
     }
     try {
       latestQueryRef.current = query;
-      const books = await searchBooks(query);
+      const res = await searchBooks(query);
       if (latestQueryRef.current !== query) return;
-      setResults(books);
-      setShowDropdown(true);
+      setResults(res.items);
+      setShowDropdown(res.items.length > 0);
     } catch {
       setResults([]);
       setShowDropdown(false);
