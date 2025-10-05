@@ -1,8 +1,6 @@
-
 import { useState, useEffect, useRef } from "react";
 import { getBooksWithPagination, getGenres, searchBooks } from "./service";
 import type { Book, BooksListResponse } from "./type";
-
 import type { Genres } from "./genres-type";
 import { FALLBACK_GENRES } from "./genres.constants";
 import Page from "../../components/ui/layout/page";
@@ -13,7 +11,7 @@ import Spinner from "../../components/ui/spinner";
 import storage from "../../utils/storage";
 import "../../index.css";
 import "./books-pages.css";
-import "../../components/ui/search-bar.css"
+import "../../components/ui/search-bar.css";
 
 const ITEMS_PER_PAGE = 8;
 
@@ -32,11 +30,11 @@ function BooksPage() {
   const [filterGenres, setFilterGenres] = useState<Genres[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-
   const [results, setResults] = useState<Book[]>([]);
   const [query, setQuery] = useState("");
   const [showDropdown, setShowDropdown] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const latestQueryRef = useRef("");
 
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
@@ -62,21 +60,20 @@ function BooksPage() {
     };
   }, []);
 
-  // Search bar
+  // Close the dropdown when clicking outside of it
   useEffect(() => {
-    function handleClickOutside(event: MouseEvent) {
+    if (!showDropdown) return;
+
+    const handleClickOutside = (event: MouseEvent) => {
       if (
         dropdownRef.current &&
         !dropdownRef.current.contains(event.target as Node)
       ) {
         setShowDropdown(false);
       }
-    }
-    if (showDropdown) {
-      document.addEventListener("mousedown", handleClickOutside);
-    } else {
-      document.removeEventListener("mousedown", handleClickOutside);
-    }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
@@ -85,6 +82,7 @@ function BooksPage() {
   const handleInputChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setQuery(value);
+    latestQueryRef.current = value;
     if (!value.trim() || value.length < 3) {
       setResults([]);
       setShowDropdown(false);
@@ -92,6 +90,7 @@ function BooksPage() {
     }
     try {
       const books = await searchBooks(value);
+      if (latestQueryRef.current !== value) return;
       setResults(books);
       setShowDropdown(books.length > 0);
     } catch {
@@ -108,10 +107,12 @@ function BooksPage() {
       return;
     }
     try {
+      latestQueryRef.current = query;
       const books = await searchBooks(query);
+      if (latestQueryRef.current !== query) return;
       setResults(books);
       setShowDropdown(true);
-    } catch (error) {
+    } catch {
       setResults([]);
       setShowDropdown(false);
     }
@@ -121,6 +122,7 @@ function BooksPage() {
     setShowDropdown(false);
     setQuery("");
     setResults([]);
+    latestQueryRef.current = "";
     navigate(`/books/${bookId}`);
   };
 
@@ -129,6 +131,7 @@ function BooksPage() {
       ? filterGenres.some((g) => book.genre.includes(g))
       : true,
   );
+
   useEffect(() => {
     let mounted = true;
     setIsLoading(true);
@@ -144,7 +147,7 @@ function BooksPage() {
         if (!mounted) return;
         setBooks(res.items);
         setTotalPages(res.pages);
-      } catch (error) {
+      } catch {
         if (!mounted) return;
         setBooks([]);
         setErrorMessage("We couldn't load the books list.");
@@ -181,9 +184,15 @@ function BooksPage() {
           {errorMessage}
         </div>
       )}
-
-      <form className="filter-form" style={{ display: "flex", gap: "2rem", alignItems: "center", position: "relative" }}>
-
+      <div
+        className="filter-form"
+        style={{
+          display: "flex",
+          gap: "2rem",
+          alignItems: "center",
+          position: "relative",
+        }}
+      >
         <div className="filter-tags">
           Genres:
           {availableGenres.map((genre) => (
@@ -203,7 +212,11 @@ function BooksPage() {
             </label>
           ))}
         </div>
-        <div className="header-search" ref={dropdownRef} style={{ position: "relative" }}>
+        <div
+          className="header-search"
+          ref={dropdownRef}
+          style={{ position: "relative" }}
+        >
           <form onSubmit={handleSearch} autoComplete="off">
             <input
               type="text"
@@ -230,11 +243,11 @@ function BooksPage() {
             </ul>
           )}
         </div>
-      </form>
-      {books.length ? (
+      </div>
+      {filteredBooks.length ? (
         <div>
           <div className="book-list">
-            {books.map((book) => (
+            {filteredBooks.map((book) => (
               <Link to={`/books/${book.id}`} key={book.id}>
                 <BookItem book={book} />
               </Link>
