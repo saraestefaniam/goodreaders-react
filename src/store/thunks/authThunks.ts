@@ -8,6 +8,11 @@ interface LoginPayload {
   password: string;
 }
 
+interface LoginResponse {
+  access_token: string;
+  user: User;
+}
+
 type CreateUserPayload =
   | {
       name: string;
@@ -21,8 +26,13 @@ export const loginUser = createAsyncThunk(
   "auth/login",
   async (loginData: LoginPayload, { rejectWithValue }) => {
     try {
-      const response = await api.post("/api/v1/auth/login", loginData);
-      return { token: response.data.access_token }
+      const response = await api.post<LoginResponse>(
+        "/api/v1/auth/login",
+        loginData,
+      );
+      const token = response.data.access_token;
+      const user = response.data.user;
+      return { token, user };
     } catch (error) {
       if (axios.isAxiosError(error) && error.response) {
         return rejectWithValue(error.response.data.message || "Error login");
