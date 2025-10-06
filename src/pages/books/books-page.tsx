@@ -91,8 +91,8 @@ function BooksPage() {
     try {
       const res = await searchBooks(value);
       if (latestQueryRef.current !== value) return;
-      setResults(res.items);
-      setShowDropdown(res.items.length > 0);
+      setResults(Array.isArray(res) ? res : res.items);
+      setShowDropdown((Array.isArray(res) ? res : res.items).length > 0);
     } catch {
       setResults([]);
       setShowDropdown(false);
@@ -228,8 +228,10 @@ function BooksPage() {
                   onClick={() => handleResultClick(book.id)}
                   onMouseDown={(e) => e.preventDefault()}
                 >
-                  <strong>{book.title}</strong>
-                  <span className="search-result-author">{book.author}</span>
+                  <span className="search-result-title">{book.title}</span>
+                  {book.author && (
+                    <span className="search-result-author">{book.author}</span>
+                  )}
                 </li>
               ))}
             </ul>
