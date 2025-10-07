@@ -1,8 +1,8 @@
 .filter-form {
   display: flex;
-  flex-wrap: wrap;
-  gap: 2rem;
-  align-items: center;
+  flex-direction: column;
+  gap: 1rem;
+  align-items: stretch;
   position: relative;
   padding: 12px 16px;
   margin-bottom: 20px;
@@ -10,6 +10,15 @@
   border: 1px solid rgba(var(--border), 0.7);
   border-radius: calc(var(--radius) + 4px);
   box-shadow: 0 8px 20px rgba(15, 23, 42, 0.08);
+}
+
+@media (min-width: 768px) {
+  .filter-form {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 2rem;
+    align-items: center;
+  }
 }
 
 .filter-tags {
@@ -32,25 +41,45 @@
   --book-card-width: 280px;
   --book-card-height: 420px;
   display: grid;
-  grid-template-columns: repeat(4, var(--book-card-width));
+  grid-template-columns: repeat(2, 1fr);
   grid-auto-rows: var(--book-card-height);
   justify-content: center;
   align-items: stretch;
   gap: 24px;
+  max-width: 100%;
+  padding: 0 12px;
 }
 
-.book-list > a {
+/* Tablet screens - 3 columns */
+@media (min-width: 768px) {
+  .book-list {
+    grid-template-columns: repeat(3, 1fr);
+    padding: 0 16px;
+  }
+}
+
+/* Large screens - 4 columns */
+@media (min-width: 1200px) {
+  .book-list {
+    grid-template-columns: repeat(4, minmax(280px, 1fr));
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0;
+  }
+}
+
+.book-list>a {
   display: flex;
   height: 100%;
   text-decoration: none;
   color: inherit;
 }
 
-.book-list > a:focus-visible {
+.book-list>a:focus-visible {
   outline: none;
 }
 
-.book-list > a:focus-visible .book-item {
+.book-list>a:focus-visible .book-item {
   box-shadow: 0 0 0 3px rgba(var(--accent), 0.3),
     0 12px 24px rgba(15, 23, 42, 0.12);
 }

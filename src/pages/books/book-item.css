@@ -1,9 +1,7 @@
 .book-item {
   display: flex;
   flex-direction: column;
-  width: var(--book-card-width, 280px);
-  min-width: var(--book-card-width, 280px);
-  max-width: var(--book-card-width, 280px);
+  width: 100%;
   height: var(--book-card-height, 360px);
   min-height: var(--book-card-height, 360px);
   max-height: var(--book-card-height, 360px);
@@ -44,12 +42,10 @@
   content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(
-    200deg,
-    rgba(15, 23, 42, 0.1) 0%,
-    rgba(15, 23, 42, 0.45) 60%,
-    rgba(15, 23, 42, 0.55) 100%
-  );
+  background: linear-gradient(200deg,
+      rgba(15, 23, 42, 0.1) 0%,
+      rgba(15, 23, 42, 0.45) 60%,
+      rgba(15, 23, 42, 0.55) 100%);
   opacity: 0.55;
   transition: opacity 0.25s ease;
   border-top-left-radius: calc(var(--radius) + 6px);
