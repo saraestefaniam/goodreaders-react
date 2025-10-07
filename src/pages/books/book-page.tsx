@@ -14,6 +14,7 @@ import {
 } from "./service";
 import type { Book } from "./type";
 import "./book-page.css";
+import { useAppSelector } from "../../store/hooks";
 
 function BookPage() {
   const { bookId } = useParams();
@@ -27,9 +28,17 @@ function BookPage() {
   const [isWantToRead, setIsWantToRead] = useState(false);
   const [isUpdatingWantToRead, setIsUpdatingWantToRead] = useState(false);
   const [wantToReadError, setWantToReadError] = useState<string | null>(null);
+  const userData = useAppSelector((state) => state.auth.user);
+  const [deleteError, setDeleteError] = useState<string | null>(null);
 
   const handleDelete = async () => {
     if (!book) return;
+    if (userData?.id !== book.createdBy) {
+      setDeleteError(
+        "Forbidden action: you are not authorized to delete this book",
+      );
+      return;
+    }
     try {
       await deleteBook(book.id.toString());
       setShowConfirm(false);
@@ -42,7 +51,7 @@ function BookPage() {
         } else if (statusCode === 401) {
           navigate("/login");
         } else {
-          console.error("Unexpected error while deleting:", error);
+          setDeleteError("Unexpected error while deleting the book");
         }
       } else {
         console.error("Unknown error:", error);
@@ -223,7 +232,9 @@ function BookPage() {
                     >
                       {"★".repeat(book.rating) + "☆".repeat(5 - book.rating)}
                     </span>
-                    <span className="book-detail-rating__value">{ratingLabel}</span>
+                    <span className="book-detail-rating__value">
+                      {ratingLabel}
+                    </span>
                   </div>
                 </div>
               </div>
@@ -231,7 +242,7 @@ function BookPage() {
               <aside className="book-detail-sidebar">
                 <label
                   className={`book-detail-toggle${
-                    isUpdatingWantToRead ? " book-detail-toggle--disabled" : ""
+                    isUpdatingWantToRead ? "book-detail-toggle--disabled" : ""
                   }`}
                 >
                   <input
@@ -241,10 +252,7 @@ function BookPage() {
                     onChange={handleWantToReadChange}
                     disabled={isUpdatingWantToRead}
                   />
-                  <span
-                    className="book-detail-toggle__icon"
-                    aria-hidden="true"
-                  >
+                  <span className="book-detail-toggle__icon" aria-hidden="true">
                     {isWantToRead ? "✕" : "+"}
                   </span>
                   <span className="book-detail-toggle__text">
@@ -291,13 +299,20 @@ function BookPage() {
                 Back
               </Button>
 
-              <Button
-                type="button"
-                variant="primary"
-                onClick={() => setShowConfirm(true)}
-              >
-                Delete
-              </Button>
+              {userData?.id === book.createdBy && (
+                <Button
+                  type="button"
+                  variant="primary"
+                  onClick={() => setShowConfirm(true)}
+                >
+                  Delete
+                </Button>
+              )}
+              {deleteError && (
+                <p className="book-detail__state--error" role="alert">
+                  {deleteError}
+                </p>
+              )}
             </footer>
           </article>
         )}
