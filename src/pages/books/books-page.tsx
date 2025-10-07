@@ -126,12 +126,6 @@ function BooksPage() {
     navigate(`/books/${bookId}`);
   };
 
-  const filteredBooks = books.filter((book) =>
-    filterGenres.length
-      ? filterGenres.some((g) => book.genre.includes(g))
-      : true,
-  );
-
   useEffect(() => {
     let mounted = true;
     setIsLoading(true);
@@ -238,10 +232,10 @@ function BooksPage() {
           )}
         </div>
       </div>
-      {filteredBooks.length ? (
+      {books.length ? (
         <div>
           <div className="book-list">
-            {filteredBooks.map((book) => (
+            {books.map((book) => (
               <Link to={`/books/${book.id}`} key={book.id}>
                 <BookItem book={book} />
               </Link>
