@@ -62,7 +62,6 @@ describe("CreateUserPage", () => {
     expect(screen.getByRole("textbox", { name: /email/i })).toBeInTheDocument();
     expect(screen.getByLabelText(/^password$/i)).toBeInTheDocument();
     expect(screen.getByLabelText(/repeat password/i)).toBeInTheDocument();
-    expect(screen.getByLabelText(/avatar/i)).toBeInTheDocument();
     expect(screen.getByRole("button", { name: /Create user/i })).toBeEnabled();
   });
 

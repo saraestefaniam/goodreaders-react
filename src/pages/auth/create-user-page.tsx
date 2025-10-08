@@ -21,22 +21,17 @@ const CreateUserPage = () => {
 
   const navigate = useNavigate();
 
-  const [avatarFile, setAvatarFile] = useState<File | null>(null);
   const [passwordError, setPasswordError] = useState<string | null>(null);
   const [successfulMessage, setSuccessfulMessage] = useState<string | null>(
     null,
   );
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value, files } = event.target;
-    if (name === "avatar" && files) {
-      setAvatarFile(files[0]);
-    } else {
-      setForm((prev) => ({
-        ...prev,
-        [name]: value,
-      }));
-    }
+    const { name, value } = event.target;
+    setForm((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
   };
 
   const passwordValidator = () => {
@@ -52,16 +47,14 @@ const CreateUserPage = () => {
     event.preventDefault();
     if (!passwordValidator()) return;
 
-    const formData = new FormData();
-    formData.append("name", form.name);
-    formData.append("email", form.email);
-    formData.append("password", form.password);
-    if (avatarFile) {
-      formData.append("avatar", avatarFile);
-    }
+    const userData = {
+      name: form.name,
+      email: form.email,
+      password: form.password,
+    };
 
     try {
-      const resultAction = await dispatch(createUser(formData));
+      const resultAction = await dispatch(createUser(userData));
 
       if (createUser.fulfilled.match(resultAction)) {
         setSuccessfulMessage(
@@ -134,18 +127,6 @@ const CreateUserPage = () => {
               required
               minLength={6}
             />
-
-            <label className="form-field">
-              <span className="form-field__label">Avatar (optional)</span>
-              <input
-                className="form-field__input"
-                id="avatar"
-                name="avatar"
-                type="file"
-                accept="image/*"
-                onChange={handleChange}
-              />
-            </label>
 
             <div className="auth-actions">
               <span className="auth-alt-action">

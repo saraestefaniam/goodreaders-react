@@ -13,14 +13,11 @@ interface LoginResponse {
   user: User;
 }
 
-type CreateUserPayload =
-  | {
-      name: string;
-      email: string;
-      password: string;
-      avatar?: File | Blob | string;
-    }
-  | FormData;
+interface CreateUserPayload {
+  name: string;
+  email: string;
+  password: string;
+}
 
 export const loginUser = createAsyncThunk(
   "auth/login",
@@ -46,22 +43,7 @@ export const createUser = createAsyncThunk(
   "auth/createUser",
   async (userData: CreateUserPayload, { rejectWithValue }) => {
     try {
-      let payload: FormData;
-      if (userData instanceof FormData) {
-        payload = userData;
-      } else {
-        payload = new FormData();
-        payload.append("name", userData.name);
-        payload.append("email", userData.email);
-        payload.append("password", userData.password);
-        if (userData.avatar instanceof Blob) {
-          payload.append("avatar", userData.avatar);
-        } else if (userData.avatar) {
-          payload.append("avatar", userData.avatar);
-        }
-      }
-
-      const response = await api.post<User>("/api/v1/users", payload);
+      const response = await api.post<User>("/api/v1/users", userData);
       return response.data;
     } catch (error) {
       if (axios.isAxiosError(error) && error.response) {
