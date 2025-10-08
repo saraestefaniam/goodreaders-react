@@ -9,9 +9,10 @@ import Button from "../../components/ui/button";
 import {
   getBook,
   deleteBook,
-  updateWantToReadStatus,
+  markWantToRead,
+  unmarkWantToRead,
   getWantToReadStatus,
-} from "./service";
+} from "./service"; // Cambia el import
 import type { Book } from "./type";
 import "./book-page.css";
 import { useAppSelector } from "../../store/hooks";
@@ -20,9 +21,7 @@ function BookPage() {
   const { bookId } = useParams();
   const navigate = useNavigate();
   const [book, setBook] = useState<Book | null>(null);
-  const [status, setStatus] = useState<"loading" | "success" | "error">(
-    "loading",
-  );
+  const [status, setStatus] = useState<"loading" | "success" | "error">("loading");
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [showConfirm, setShowConfirm] = useState(false);
   const [isWantToRead, setIsWantToRead] = useState(false);
@@ -34,9 +33,7 @@ function BookPage() {
   const handleDelete = async () => {
     if (!book) return;
     if (userData?.id !== book.createdBy) {
-      setDeleteError(
-        "Forbidden action: you are not authorized to delete this book",
-      );
+      setDeleteError("Forbidden action: you are not authorized to delete this book");
       return;
     }
     try {
@@ -69,7 +66,11 @@ function BookPage() {
     setIsUpdatingWantToRead(true);
 
     try {
-      await updateWantToReadStatus(bookId, nextStatus);
+      if (nextStatus) {
+        await markWantToRead(bookId); // Usar nueva función
+      } else {
+        await unmarkWantToRead(bookId); // Usar nueva función
+      }
       setIsWantToRead(nextStatus);
       setBook((prev) => (prev ? { ...prev, wantToRead: nextStatus } : prev));
     } catch (error) {
@@ -84,8 +85,7 @@ function BookPage() {
           return;
         }
         setWantToReadError(
-          error.response?.data?.message ??
-            "Unable to update want-to-read status.",
+          error.response?.data?.message ?? "Unable to update want-to-read status.",
         );
       } else {
         setWantToReadError("Unable to update want-to-read status.");
@@ -150,8 +150,7 @@ function BookPage() {
             return;
           }
           setWantToReadError(
-            error.response?.data?.message ??
-              "Unable to load want-to-read status.",
+            error.response?.data?.message ?? "Unable to load want-to-read status.",
           );
         } else {
           setWantToReadError("Unable to load want-to-read status.");
