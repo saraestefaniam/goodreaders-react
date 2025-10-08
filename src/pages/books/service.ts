@@ -3,7 +3,6 @@ import type { Book, BooksListResponse, WantToReadStatus } from "./type";
 import type { Genres } from "./genres-type";
 
 const BOOKS_URL = "api/v1/books";
-const WANT_TO_READ_URL = "api/v1/users/want-to-read";
 
 // GET lista paginada con filtro opcional de géneros
 export const getBooksWithPagination = async (
@@ -45,18 +44,20 @@ export const deleteBook = async (bookId: string) => {
   await api.delete(url);
 };
 
-// PATCH estado Want to read
-export const updateWantToReadStatus = async (
-  bookId: string,
-  wantToRead: boolean,
-) => {
-  await api.patch(`${WANT_TO_READ_URL}/${bookId}`, { wantToRead });
+// PATCH marcar como quiero leer
+export const markWantToRead = async (bookId: string) => {
+  await api.patch(`${BOOKS_URL}/${bookId}/want-to-read`);
+};
+
+// PATCH desmarcar como quiero leer
+export const unmarkWantToRead = async (bookId: string) => {
+  await api.patch(`${BOOKS_URL}/${bookId}/unmark-want-to-read`);
 };
 
 // GET estado Want to read
 export const getWantToReadStatus = async (bookId: string) => {
   const { data } = await api.get<WantToReadStatus>(
-    `${WANT_TO_READ_URL}/${bookId}`,
+    `${BOOKS_URL}/${bookId}/want-to-read-status`, 
   );
   return data;
 };

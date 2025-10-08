@@ -14,6 +14,7 @@ export interface Book {
   wantToRead?: boolean;
   createdAt: string;
   updatedAt: string;
+  createdBy: string;
 }
 
 export interface WantToReadStatus {

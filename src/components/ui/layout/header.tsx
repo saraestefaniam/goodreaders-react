@@ -29,7 +29,10 @@ function Header() {
     setMenuOpen(false);
   }, [location.pathname]);
 
-  const navLinks = [{ to: "/books", label: "Books" }];
+  const navLinks = [
+    { to: "/books", label: "Books" },
+    { to: "/want-to-read", label: "Want To Read" },
+  ];
 
   const authLinks = isLogged
     ? []

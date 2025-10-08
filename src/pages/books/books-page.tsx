@@ -91,8 +91,8 @@ function BooksPage() {
     try {
       const res = await searchBooks(value);
       if (latestQueryRef.current !== value) return;
-      setResults(res.items);
-      setShowDropdown(res.items.length > 0);
+      setResults(Array.isArray(res) ? res : res.items);
+      setShowDropdown((Array.isArray(res) ? res : res.items).length > 0);
     } catch {
       setResults([]);
       setShowDropdown(false);
@@ -125,12 +125,6 @@ function BooksPage() {
     latestQueryRef.current = "";
     navigate(`/books/${bookId}`);
   };
-
-  const filteredBooks = books.filter((book) =>
-    filterGenres.length
-      ? filterGenres.some((g) => book.genre.includes(g))
-      : true,
-  );
 
   useEffect(() => {
     let mounted = true;
@@ -228,18 +222,20 @@ function BooksPage() {
                   onClick={() => handleResultClick(book.id)}
                   onMouseDown={(e) => e.preventDefault()}
                 >
-                  <strong>{book.title}</strong>
-                  <span className="search-result-author">{book.author}</span>
+                  <span className="search-result-title">{book.title}</span>
+                  {book.author && (
+                    <span className="search-result-author">{book.author}</span>
+                  )}
                 </li>
               ))}
             </ul>
           )}
         </div>
       </div>
-      {filteredBooks.length ? (
+      {books.length ? (
         <div>
           <div className="book-list">
-            {filteredBooks.map((book) => (
+            {books.map((book) => (
               <Link to={`/books/${book.id}`} key={book.id}>
                 <BookItem book={book} />
               </Link>

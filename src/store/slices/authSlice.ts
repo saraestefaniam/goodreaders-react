@@ -14,8 +14,10 @@ interface AuthState {
   error: string | null;
 }
 
+const storedUser = storage.get("user")
+
 const initialState: AuthState = {
-  user: null,
+  user: storedUser ? (JSON.parse(storedUser) as User): null,
   token: storage.get("auth"),
   loading: false,
   error: null,
@@ -29,6 +31,7 @@ const authSlice = createSlice({
       state.user = null;
       state.token = null;
       storage.remove("auth");
+      storage.remove("user")
       removeAuthorizationHeader();
     },
   },
@@ -40,6 +43,9 @@ const authSlice = createSlice({
     builder.addCase(loginUser.fulfilled, (state, action) => {
       state.loading = false;
       state.token = action.payload.token;
+      state.user = action.payload.user
+      storage.set("auth", action.payload.token)
+      storage.set("user", JSON.stringify(action.payload.user))
       setAuthorizationHeader(action.payload.token);
     });
     builder.addCase(loginUser.rejected, (state, action) => {
