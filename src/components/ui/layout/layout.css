@@ -44,3 +44,25 @@
 .layout-title:empty {
   display: none;
 }
+
+/* Estilos para la navegación */
+.layout-header {
+  background: #f6f6fa;
+  padding: 1rem 2rem;
+  border-bottom: 1px solid rgb(var(--border));
+}
+
+.main-nav {
+  display: flex;
+  gap: 2rem;
+}
+
+.main-nav a {
+  text-decoration: none;
+  color: #333;
+  font-weight: bold;
+  font-size: 18px;
+}
+.main-nav a:hover {
+  color: #007bff;
+}
