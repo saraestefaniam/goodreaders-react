@@ -16,6 +16,7 @@ import {
 import type { Book } from "./type";
 import "./book-page.css";
 import { useAppSelector } from "../../store/hooks";
+import coverPlaceholder from "../../assets/cover_book_placeholder.jpg";
 
 function BookPage() {
   const { bookId } = useParams();
@@ -200,7 +201,7 @@ function BookPage() {
             <div className="book-detail-hero">
               <img
                 className="book-detail-cover"
-                src={book.cover || "/descarga.png"}
+                src={book.cover || coverPlaceholder}
                 alt={`Cover art for ${book.title}`}
               />
 

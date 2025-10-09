@@ -31,11 +31,10 @@ function Header() {
 
   const navLinks = [
     { to: "/books", label: "Books" },
-    { to: "/want-to-read", label: "Want To Read" },
   ];
 
   const authLinks = isLogged
-    ? []
+    ? [{ to: "/want-to-read", label: "Want To Read" }]
     : [{ to: "/new-user", label: "Create Account" }];
 
   const getNavLinkClass = ({ isActive }: { isActive: boolean }) =>
